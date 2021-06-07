@@ -1,0 +1,413 @@
+第三篇刷题笔记 。  
+
+## 40. 组合总和 II
+
+### 题目　　
+
+给定一个数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+
+candidates 中的每个数字在每个组合中只能使用一次。
+
+说明：
+
+所有数字（包括目标数）都是正整数。
+解集不能包含重复的组合。 
+
+**示例 1:**
+
+输入: candidates = [10,1,2,7,6,1,5], target = 8,
+所求解集为:
+
+[  
+  [1, 7],  
+  [1, 2, 5],  
+  [2, 6],  
+  [1, 1, 6]  
+]  
+
+**示例 2:**
+
+输入: candidates = [2,5,2,1,2], target = 5,
+所求解集为:
+
+[  
+  [1,2,2],  
+  [5]  
+]  
+
+### 思路：
+这一题和上一题的不同在于有了**重复的数字**，上一个题中所有数字是排好了序的。这就会出现一部分结果相同但顺序不同的相同解重复的问题。  
+比如：`[1, 7] 和 [7, 1]`。这一点比较麻烦，我个人的题解中，是通过先将所有数字排序，这样相同的数字会在一起，就不会出现`[1, 7] 和 [7, 1]`这种情况，再利用set来除重，就有了这一种虽然低效但是也可用的解法。
+
+```cpp
+class Solution {
+private:
+    set<vector<int>> ans;
+    void bt(vector<int>& v, int index, int remain, vector<int>& candidates){
+        if(remain==0){  //合格出口，加入结果
+            ans.insert(v);
+            return;
+        }
+        if(remain<0){   //不合格题解
+            return;
+        }
+        for(int i = index+1;i<candidates.size();i++){
+            v.push_back(candidates[i]); //加入当前数字，继续回溯
+
+            bt(v, i, remain-candidates[i], candidates); //递归试探
+
+            v.pop_back();   //试探结束后，为了继续使用其他数字，需要把影响复原，即再弹出当前数字。不用在意bt函数里进行了什么操作，只需要把当前自己加进去的数字删除即可
+        }
+    }
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(), candidates.end());
+        vector<int> v;
+        bt(v, -1, target, candidates);
+        vector<vector<int>> ret;
+        ret.assign(ans.begin(), ans.end());
+        return ret;
+    }
+};
+```
+
+## 46. 全排列
+### 题目　　
+
+给定一个不含重复数字的数组 nums ，返回其 所有可能的全排列 。你可以 按任意顺序 返回答案。
+
+示例 1：
+
+输入：nums = [1,2,3]  
+输出：[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]  
+
+### 思路：
+按照我个人的思路，也是典型的回溯算法几个重要特征。
+```cpp
+class Solution {
+public:
+    vector<vector<int>> res;
+    void backTrack(vector<int>& unused, vector<int>& shape ){
+        if(unused.size()==0){   //出口条件
+            res.push_back(shape);
+            return;
+        }
+        for(int i = 0;i<unused.size();i++){ 
+            //加入当前数字需要做的变化
+            int tmp = unused.at(i);
+            unused.erase(unused.begin()+i);
+            shape.push_back(tmp);
+
+            backTrack(unused, shape);   //继续试探
+
+            //撤销所有影响
+            shape.pop_back();
+            unused.insert(unused.begin()+i, tmp);
+        }
+    } 
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<int> shape;
+        backTrack(nums, shape);
+        return res;
+    }
+};
+```
+
+
+## 542. 01 矩阵
+### 题目　　
+给定一个由 0 和 1 组成的矩阵，找出每个元素到最近的 0 的距离。
+
+两个相邻元素间的距离为 1 。
+
+
+**示例 1：**
+
+输入：  
+[[0,0,0],  
+ [0,1,0],  
+ [0,0,0]]  
+
+输出：  
+[[0,0,0],  
+ [0,1,0],  
+ [0,0,0]]  
+
+### 思路：
+这个题一拿到手感觉像是动态规划的问题，但是每一个点的最小值可能是其上下左右四个值中最小值加一，我找不到合适的遍历方式，所以换了一个比较古怪的思路。
+### 方法一： 
+所求答案矩阵`ans`和输入矩阵`input`形状一样，记为`m*n`的矩阵，将`ans`的所有制初始化为`INT_MAX`，以此遍历`i, j`，到每一个格时更新他为 0 或者 上下左右四个方向上的最小值加一（比原来的位置上距离小），每一轮遍历如果有更新，则继续遍历，直到没有更新为止。  
+这个方法实际提交能过，但是由于每一次有更新都可能需要多轮遍历来发散开，收敛相对很慢。所以提交结果比较差。
+
+```cpp
+class Solution {
+public:
+    
+    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+        int rows = mat.size();
+        int cols = mat[0].size();
+        vector<vector<int>> res(rows, vector<int>(cols,INT_MAX));
+        int directions[][2] = {{-1,0},{1,0},{0,-1},{0,1}};
+        while(1){
+            //一直遍历直到没有更新
+            int count = 0;
+            for(int i = 0;i<rows;i++){
+                for(int j = 0;j<cols;j++){
+                    if(mat[i][j]==0 && res[i][j]!=0){
+                        res[i][j] = 0;
+                        count++;    //有更新
+                    }
+                    else{
+                        for(int k = 0;k<4;k++){ //四个方向
+                            int next_i = i+directions[k][0];
+                            int next_j = j+directions[k][1];
+                            if(next_i<0 || next_i==rows || next_j<0 || next_j==cols){
+                                continue;   //碰壁，下一个方向
+                            }
+                            if(res[next_i][next_j]!=INT_MAX && res[next_i][next_j] + 1 < res[i][j]){
+                                res[i][j] = res[next_i][next_j] + 1;    //更新最小值
+                                count++;    //有更新
+                            }
+                        }
+                    }
+                }
+            }
+            if(!count) break;  //没有更新
+        }
+        return res;
+    }
+};
+```
+
+### 方法二：动态规划  
+看了题解发现，虽然每一个格的的实际结果跟上下左右四个方向都可能有关系，但也可以通过动态规划解决这个问题，只需要分别考虑最近的 0 点在该点的**左上，左下，右上，右下**<u>四个方向上分别动态规划</u>，得到四个对应的`m*n`的矩阵，只需要每个点都取这四个矩阵中对应点的最小值，就可以得到最后的结果。
+```
+      |
+  zs  |  ys
+      |
+------1------
+      |
+  zx  |  yx
+      |
+```
+```cpp
+class Solution {
+public:
+    vector<vector<int>> updateMatrix(vector<vector<int>>& matrix) {
+        int m = matrix.size(), n = matrix[0].size();
+        // 初始化动态规划的数组，所有的距离值都设置为一个很大的数
+        vector<vector<int>> dist(m, vector<int>(n, INT_MAX / 2));
+        // 如果 (i, j) 的元素为 0，那么距离为 0
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (matrix[i][j] == 0) {
+                    dist[i][j] = 0;
+                }
+            }
+        }
+        // 只有 水平向左移动 和 竖直向上移动，注意动态规划的计算顺序
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
+                if (i - 1 >= 0) {
+                    dist[i][j] = min(dist[i][j], dist[i - 1][j] + 1);
+                }
+                if (j - 1 >= 0) {
+                    dist[i][j] = min(dist[i][j], dist[i][j - 1] + 1);
+                }
+            }
+        }
+        // 只有 水平向左移动 和 竖直向下移动，注意动态规划的计算顺序
+        for (int i = m - 1; i >= 0; --i) {
+            for (int j = 0; j < n; ++j) {
+                if (i + 1 < m) {
+                    dist[i][j] = min(dist[i][j], dist[i + 1][j] + 1);
+                }
+                if (j - 1 >= 0) {
+                    dist[i][j] = min(dist[i][j], dist[i][j - 1] + 1);
+                }
+            }
+        }
+        // 只有 水平向右移动 和 竖直向上移动，注意动态规划的计算顺序
+        for (int i = 0; i < m; ++i) {
+            for (int j = n - 1; j >= 0; --j) {
+                if (i - 1 >= 0) {
+                    dist[i][j] = min(dist[i][j], dist[i - 1][j] + 1);
+                }
+                if (j + 1 < n) {
+                    dist[i][j] = min(dist[i][j], dist[i][j + 1] + 1);
+                }
+            }
+        }
+        // 只有 水平向右移动 和 竖直向下移动，注意动态规划的计算顺序
+        for (int i = m - 1; i >= 0; --i) {
+            for (int j = n - 1; j >= 0; --j) {
+                if (i + 1 < m) {
+                    dist[i][j] = min(dist[i][j], dist[i + 1][j] + 1);
+                }
+                if (j + 1 < n) {
+                    dist[i][j] = min(dist[i][j], dist[i][j + 1] + 1);
+                }
+            }
+        }
+        return dist;
+    }
+};
+
+```
+
+## 523. 连续的子数组和
+### 题目　　
+给你一个整数数组 nums 和一个整数 k ，编写一个函数来判断该数组是否含有同时满足下述条件的连续子数组：
+
+* 子数组大小 至少为 2 ，且
+* 子数组元素总和为 k 的倍数。
+
+如果存在，返回 true ；否则，返回 false 。
+
+如果存在一个整数 n ，令整数 x 符合 x = n * k ，则称 x 是 k 的一个倍数。
+
+### 思路：
+### 思路一：动态规划
+第一次提交，觉得这是一个动态规划题目，dp[i][j]记录从i到j的和。又根据题目，只要出现是k的倍数便可以停止遍历，不需要之前的结果，所以可以用两个变量分别记录上次结果（余数）和这次的数（余数），若为0便可以停止遍历。
+```cpp
+class Solution {
+public:
+    bool checkSubarraySum(vector<int>& nums, int k) {
+        int len = nums.size();
+        int before, curr;
+        //init
+        for(int i = 0;i<len;i++){
+            before = nums[i]%k;
+            for(int j = i+1;j<len;j++ ){
+                curr = (before + nums[j])%k;
+                before = curr;
+                if(curr == 0) return true;
+            }
+        }
+        return false;
+    }
+};
+```
+
+但是最后两个用例足有500KB，使用动态规划思想，时间复杂度为 $O(n^2)$ ，无法解决超时问题。
+
+### 思路二：前缀和 + 集合
+看到这个题目的关键字 **连续的** 、**数组和** ，应该想到利用前缀和，只需要分别计算从下标 0 到下标 i 的数组前缀和，只需要 $O(n)$ 的空间`sum[n]`，就可以知道任意从 a 到 b 的数组之和为`sum[b] - sum[a-1]`。这便是前缀和的思想。  
+值得注意的是一般从开头开始的序列需要减去值 0 ，我们可以通过开辟长度为`n+1`的数组或是初始化before变量为 0 来解决。
+```
+□□□□□□□□□
+-
+□□□□
+=
+    □□□□□
+```
+为了继续优化，我们考虑如果`sum[j] - sum[i]`即从`i+1`到`j`的数组和是`k`的倍数，则`sum[j]`和`sum[i]`的余数应该相同，可以使用一个**集合Set**来存放遇到过的所有余数，但要注意的是为了保证长度至少为2，我们应该在下一次遍历只后再放入上一次的余数结果。这样对于开头第一个数字，集合为空，对其他所有数字，看不到上一次的余数结果，就保证了长度至少为2。
+```cpp
+class Solution {
+public:
+    bool checkSubarraySum(vector<int>& nums, int k) {
+        int len = nums.size();
+        set<int> set;
+        int before = 0, curr;
+        for(int i = 0;i<len;i++){
+            curr = (before + nums[i])%k;
+            if(set.find(curr)!=set.end()) return true;
+            set.insert(before);
+            before = curr;
+        }
+        return false;
+    }
+};
+```
+
+## 416. 分割等和子集
+### 题目　　
+给你一个 只包含正整数 的 非空 数组 nums 。请你判断是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。
+
+### 思路：0-1背包问题
+容易想到的是，只需要判断是否能够从数组中选出一个子集使其和为原数组总和的一半即可。  
+因此将这个题转换为 `0-1背包问题` ，每个数字可以拿或者不拿，需要刚好凑够总和的一半。  
+
+### 最开始的判断
+先进行以下判断，之后才可以进行动态规划求解：  
+1. 总和 sum 是否为偶数，否则返回 false ，是偶数则令 target = sum/2
+2. 其中最大值是否大于 target ，是则直接返回 false ，如果没有这一步判断，在下面的动态规划中会导致下标访问直接溢出  
+
+### 动态规划
+创建二维数组 `dp[n][target+1]` ，包含 n 行 target+1 列，其中 dp[i][j] 表示从数组的 [0,i] 下标范围内选取若干个正整数（可以是 0 个），是否存在一种选取方案使得被选取的正整数的和等于 j。初始时，dp 中的全部元素都是 false。  
+**注意：** 需要 `target+1` 列来包括 `0~target`   
+
+```cpp
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int sum = accumulate(nums.begin(), nums.end(), 0);  //求和
+
+        //最开始的判断（防止溢出）
+        if(sum%2) return false;
+        int target = sum/2;
+        int maxNum = *max_element(nums.begin(), nums.end());
+        if(maxNum>target){
+            return false;
+        }
+
+        int len = nums.size();
+        vector<vector<bool>> dp(len,vector<bool>(target+1, false));
+        //初始化
+        for(int i =0;i<len;i++){
+            dp[i][0] = true;
+        }
+        dp[0][nums[0]] = true;
+
+        for(int i = 1;i<len;i++){
+            int num = nums[i];
+            for(int j = 1;j<=target;j++){
+                //状态转换方程
+                if(j - num <0){
+                    dp[i][j] = dp[i-1][j];
+                }else{
+                    dp[i][j] = dp[i-1][j] ||  dp[i-1][j-num];
+                }
+            }
+        }
+        //所需结果
+        return dp[len-1][target];
+    }
+};
+```
+
+## 525. 连续数组
+### 题目　　
+给定一个二进制数组 nums , 找到含有相同数量的 0 和 1 的最长连续子数组，并返回该子数组的长度。
+
+### 思路：
+看到关键词 **“最长”** 、**“连续子数组”**， 可以想到本地可以使用 **前缀和+哈希表** 来解决。具体前缀和原理可参考上面 523. 连续的子数组和 。
+
+为了找到含有相同数量的 0 和 1 的最长连续子数组，可以使用一个变量 `count` 记录0和1的出现，见到1加一，见到的0减一。  
+也就是说，如果一个子数组 `[i,j]` 中 0 和 1 数量相同，这个区间的 `count` 应该为零，也就是 `count[j]-count[i-1] = 0` ，在实际的实现中，不需要数组来记录所有的count[i]，只需要使用一个哈希表，记录所有之前出现过的count，如果新的count在哈希表里，只需要比对是否是新的最大长度，否则就将这个count加入哈希表中。
+```cpp
+class Solution {
+public:
+    int findMaxLength(vector<int>& nums) {
+        int len = nums.size();
+        unordered_map<int, int> hashMap;
+        hashMap.insert({0,0});  //注意要加入初始值，如果使用数组保存，应该多声明一个，记录初始状态
+        int count = 0;
+        int max_num = 0;
+        for(int i =1;i<=len;i++){
+            //遍历每个数
+            if(nums[i-1]==1) count++;
+            else count--;
+            auto it = hashMap.find(count);
+            if(it!=hashMap.end()){
+                //存在
+                max_num = max(max_num,i - it->second);
+            }else{
+                //插入
+                hashMap.insert({count, i});
+            }
+        }
+        return max_num;
+    }
+};
+```
