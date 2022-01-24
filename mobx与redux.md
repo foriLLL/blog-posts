@@ -20,7 +20,7 @@ Flux架构的概念由Facebook在2014年提出。不严谨地讲，它和MVC架�
 
 Flux 的最大特点，就是数据的"单向流动"。  
 
-![Flux的数据单向流动](https://img.foril.fun/bg2016011503.png)
+![Flux的数据单向流动](https://img0.baidu.com/it/u=3576204246,1143892932&fm=26&fmt=auto)
 
 它将一个应用分成四个部分。
 * View： 视图层
