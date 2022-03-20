@@ -164,6 +164,32 @@ objectMapper.setDateFormat(dateFormat);
 String json = objectMapper.writeValueAsString(对象);
 ```
 
+## Using Optional with Jackson
+一般注意不要将Optional作为field，可将getter返回值改为`Optional<T>`作为代替，在这种情况下，我们若直接将对象序列化，会得到一个含有`empty`和`present`字段的JSON，而不是包含我们存放的数据。  
+```json
+{
+  "name" : {
+    "empty" : true,
+    "present" : false
+  },
+  "age" : 12,
+  "birthday" : "2010-01-28"
+}
+```
+而将JSON反序列化时，我们会得到一个` JsonMappingException`异常。  
+
+而我们实际想要的结果，就是Jackson能将一个空的Optional对象视为null，从非空的Optional中直接拿出实际数据。  
+幸运的是，Jackson拥有一套能够解决JDK8数据类型的模块，这其中也包括Optional。  
+我们只需要加入依赖，再将这个模块注册给`ObjectMapper`即可。  
+```gradle
+implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.6'
+```
+```java
+ObjectMapper mapper = new ObjectMapper();
+mapper.registerModule(new Jdk8Module());
+```
+
 ## 参考
 * https://blog.csdn.net/psh18513234633/article/details/88599509
 * https://blog.csdn.net/wangxuelei036/article/details/107360975/
+* https://www.baeldung.com/jackson-optional
