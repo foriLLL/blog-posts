@@ -1,0 +1,1 @@
+https://chelseatroy.com/2020/05/09/question-how-does-git-detect-renames/
