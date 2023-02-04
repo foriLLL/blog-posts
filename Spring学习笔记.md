@@ -131,6 +131,9 @@ Spring 的继承中，子bean可以继承父bean中的所有成员变量的值�
 通过设置bean标签的`parent`属性建立继承关系，同时子bean可以覆盖父bean的属性值。  
 Spring的继承是**针对对象**的，所以子bean和父bean并不需要属于同一个数据类型，**只要其成员变量列表一致即可**（如果它看起来像鸭子、游泳像鸭子、叫声像鸭子，那么它可能就是只鸭子）。
 
+#### Bean的依赖
+与继承类似，依赖也是描述bean与bean之间的另一种关系。利用`depends-on`属性。
+
 #### Spring读取外部资源
 可以在`xml`资源文件中加入如`context:property-placeholder`标签，利用EL表达式`${}`读取`properties`文件中的数据。
 #### Spring p命名空间
@@ -216,15 +219,39 @@ Spring ⼯⼚⽅法 IoC 通过⼯⼚模式创建 bean 有两种⽅式：
 - 实例⼯⼚⽅法
 
 区别在于静态⼯⼚类不需要实例化，实例⼯⼚类需要实例化。  
-spring.xml 中 class + factory-method 的形式是直接调⽤类中的⼯⼚⽅法；  
+spring.xml 中 class + factory-method 的形式是直接调⽤类中的⼯⼚⽅法； 
+```xml
+<bean id="car" class="edu.ssdut.factory.StaticCarFactory" factory-method="getCar">
+    <constructor-arg value="2"></constructor-arg>
+</bean>
+<!-- 得到的直接是bean -->
+``` 
 spring.xml 中 factory-bean + factory-method 的形式则是调⽤⼯⼚ bean 中的⼯⼚⽅法，就必须先创建⼯⼚ bean
+```xml
+<bean id="carFactory" class="edu.ssdut.factory.InstanceCarFactory"></bean>
+<!-- 需要在IoC中创建两个bean，先创建工厂的实例，在创建car -->
+<bean id="car2" factory-bean="carFactory" factory-method="getCar">
+    <constructor-arg value="1"></constructor-arg>
+</bean>
+```
 
 #### 自动装载 autowire
 ⾃动装载是 Spring 提供的⼀种更加简便的⽅式来完成 DI，不需要⼿动配置property，IoC 容器会⾃动选择 bean 完成注⼊。  
 ⾃动装载有两种⽅式：
 - byName，通过属性名完成⾃动装载。
 - byType，通过属性对应的数据类型完成⾃动装载。
+```xml
+<!-- 手动装载 -->
+<bean id="car" class="edu.ssdut.entity.Car" p:id="1" p:name="宝马"></bean>
+<bean id="person" class="edu.ssdut.entity.Person" p:id="1" p:name="张三" >
+    <property name="car" ref="car"></property>
+</bean>
+```
 
+```xml
+<!--自动装载，byName通过名字去找id为car的对象 -->
+<bean id="person" class="edu.ssdut.entity.Person" p:id="1" p:name="张三" autowire="byName" ></bean>
+```
 
 ### AOP
 AOP（Aspect Oriented Programming），即面向切面编程，是一种新的编程方式，它和OOP不同，OOP把系统看作多个对象的交互，AOP把系统分解为不同的关注点，或者称之为切面（Aspect）。
@@ -232,9 +259,59 @@ AOP（Aspect Oriented Programming），即面向切面编程，是一种新的�
 把业务中大量重复的业务代码，比如每个业务中的权限检查，提取出来。
 
 底层原理：Spring的AOP实现就是基于JVM的动态代理。  
+```java
+public class RealSubject implements Subject{
+
+    @Override
+    public int add(int a, int b) {
+        return a+b;
+    }
+}
+
+// 动态代理
+/**
+ * 这个类实际上负责生成代理对象（代理的爹）
+ */
+public class MyInvocationHandler implements InvocationHandler {
+    private Object obj; // 存放委托对象
+
+    public Object bind(Object object){  // 返回委托对象
+        this.obj = object;
+        return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj.getClass().getInterfaces(),this);
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable { // 实现InvocationHandler接口
+        // 实现对于方法的调用，同时可以完成对方法的增强
+        // ---在这里可以完成对方法调用前的日志打印、安全检查等操作
+        System.out.println("方法名是："+method.getName());
+        // ---
+        Object result = method.invoke(this.obj, args);  // 利用发射对实际对象的调用
+        // ---在这里可以完成对方法调用后的增强
+        System.out.println(method.getName()+"的结果是："+ result);
+        // ---
+        return result;
+    }
+}
+
+// 客户端代码
+public static void main(String[] args) {
+        Subject realSubject = new RealSubject();    // 实例化真实对象
+        MyInvocationHandler handler = new MyInvocationHandler();
+        Subject proxy = (Subject)handler.bind(realSubject); // 传入实际对象，得到代理对象
+        System.out.println(proxy.add(1, 1));
+    }
+
+// 实际输出
+方法名是：add
+add的结果是：2
+2
+```
 推荐阅读：
-- [理解](https://www.liaoxuefeng.com/wiki/1252599548343744/1266265125480448)
-- [底层原理实现](Spring的AOP实现就是基于JVM的动态代理。)
+- [理解与底层原理](https://www.liaoxuefeng.com/wiki/1252599548343744/1266265125480448)
+- [Spring AOP动态代理](https://segmentfault.com/a/1190000037596406)
+
+Spring框架不需要创建InvocationHandler，只需要创建一个切面对象，将所有的非业务代码在切面对象中完成即可，Spring框架底层会自动根据切面类以及目标类生成一个代理对象。
 #### 优点
 - 可以降低模块之间的耦合性提高代码的复用性
 - 提高代码的维护性
@@ -332,15 +409,9 @@ public class UserService {
 ```
 
 
-## Spring MVC
-MVC是Web服务端常见的设计模式，Spring MVC就是一个基于Java的实现了MVC设计模式的请求驱动类型的轻量级Web框架，通过把Model，View，Controller分离，将web层进行职责解耦，把复杂的web应用分成逻辑清晰的几部分，简化开发，减少出错，方便组内开发人员之间的配合。
-
-在传统的Servlet API上实现MVC架构是一件非常繁琐的事情，我们需要实现不同的接口，而且JSP开发实在不够友好，我们希望有这么一个MVC框架，能够自动解析请求的类型，自动对应请求中的参数，这也就是Spring MVC所做的众多工作之一。
-
 ## 参考
 
 - https://zhuanlan.zhihu.com/p/147340068
 - https://juejin.cn/post/6844903923703087111
 - https://zhuanlan.zhihu.com/p/36840573
 - https://www.liaoxuefeng.com/wiki/1252599548343744/1266265100383840
-- https://baijiahao.baidu.com/s?id=1717728194505578801&wfr=spider&for=pc

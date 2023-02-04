@@ -3,6 +3,16 @@ IOC就是把创建对象的过程通过`.xml`写好，交给容器注入对象�
 ApplicationContext context = new ClassPathXmlApplicationContext("application.xml");
 ```
 之后就直接利用对象从容器中获取对象。
+
+关键词：
+```
+spring-context
+ApplicationContext
+xml配置 利用反射
+bean->id class
+property->name value ref
+```
+
 ```java
 public class Main {
     public static void main(String[] args) {
