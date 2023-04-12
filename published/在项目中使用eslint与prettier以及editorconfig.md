@@ -45,7 +45,7 @@ EditorConfig 配置的是比较基础的东西，基本上你用编辑器本身�
 项目中我采用了next.js作为开发框架，项目中默认配置了ESLint，提供一个开箱即用的ESLint体验，默认下载`eslint`和`eslint-config-next`作为项目开发依赖，只要你在`.eslintrc.json`中配置extend一个rule set，就可以完成需要的规则集合的配置。  
 
 > Prerequisite：
-> * 本地或全局安装 Prettier 和 eslint
+> * 本地或全局安装 Prettier 和 eslint，npm 安装了 Prettier 才能使用 `npm run lint` 命令来检查代码格式
 > * 编辑器支持 EditorConfig 或安装插件
 
 想要加入 Prettier， 就需要我们首先停用可能与 Prettier 冲突的所有 ESLint 规则（仅指代码格式规则）。幸运地是，`eslint-config-prettier` 包已经帮我们做了这件事。
@@ -137,6 +137,45 @@ max_line_length
 配置完成后，与代码风格相关的简单配置就可以直接在 `.editorconfig` 中配置，与 js 代码风格相关的一些配置（如行末分号等）可以在 `.prettierrc.json` 中修改，其他与代码质量息息相关的复杂问题配置可在 `.eslintrc` 中通过配置规则集合或手动覆盖规则。  
 
 有了三个工具的结合，确实可以在很大程度上提高你的开发体验。
+
+> 注意要将代码编辑器对于 .js 等文件的默认格式化工具设置为 Prettier，否则 Prettierrc 中的配置将不会生效。
+
+接下来给出一个我自己实际在 Next.js 项目开发中的所用到的配置，以便之后直接复用：
+```json
+// .prettierrc
+{
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "arrowParens": "avoid",
+    "printWidth": 80,
+    "jsxSingleQuote": false,
+    "jsxBracketSameLine": false
+}
+```
+```json
+// .eslintrc.json
+{
+    "extends": ["next/core-web-vitals", "plugin:prettier/recommended"]
+}
+```
+```conf
+# .editorconfig
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+max_line_length = off
+trim_trailing_whitespace = false
+```
+
 
 ## 参考：
 
