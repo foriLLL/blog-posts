@@ -1,4 +1,11 @@
-Java中并没有内置JSON的解析，因此使用JSON需要借助第三方类库。
+---
+description: "Java 中并没有内置 JSON 的解析，因此使用 JSON 需要借助第三方类库，本文以 Jackson 为例简单记录 Java 中 JSON 的使用。"
+time: 2021-12-13
+heroImage: ""
+tags: []
+---
+
+Java 中并没有内置 JSON 的解析，因此使用 JSON 需要借助第三方类库。
 
 下面是几个常用的 JSON 解析类库：
 
@@ -27,7 +34,7 @@ Jackson 的核心模块由三部分组成：
     <version>2.9.5</version>
 </dependency>
 ```
-## 序列化：Java对象转换为JSON
+## 序列化：Java 对象转换为 JSON
 Jackson 最常用的 API 就是基于"对象绑定" 的 `ObjectMapper`。
 
 ObjectMapper 通过 writeValue 系列方法将 java 对象序列化为 json，并将 json 存储成不同的格式：String（writeValueAsString）、Byte Array（writeValueAsBytes）、Writer、File、OutStream、DataOutput。  
@@ -103,8 +110,11 @@ class Person {
 //   "age" : 22
 // } ]
 ```
-## 反序列化：JSON转换为Java对象
-使用 `readValue()` 方法来从JSON转换为Java对象：
+
+## 反序列化：JSON 转换为 Java 对象
+
+使用 `readValue()` 方法来从 JSON 转换为 Java 对象：
+
 ```java
 Person p = new Person("xk", 22, new Date());
 s = mapper.writeValueAsString(p);
@@ -129,6 +139,7 @@ p2 = mapper.readValue(bytes, Person.class);     //从字节数组中读取
 > * 目前Jackson似乎不能正确处理内部类以及匿名类，详见[这里](https://stackoverflow.com/questions/28418564/jackson-deserialization-with-anonymous-classes)
 
 ### 反序列化为不同类型
+
 ```java
 String s = mapper.writeValueAsString(list);
 
@@ -143,7 +154,9 @@ Map<String, Object> jsonMap = mapper.readValue(s, new TypeReference<Map<String,O
 ```
 
 ## ObjectMapper配置
-在调用 writeValue 或调用 readValue 方法之前，往往需要设置 ObjectMapper 的相关配置信息。这些配置信息应用 java 对象的所有属性上。示例如下：
+
+在调用 writeValue 或调用 readValue 方法之前，往往需要设置 ObjectMapper 的相关配置信息。这些配置信息应用 Java 对象的所有属性上。示例如下：
+
 ```java
 //在反序列化时忽略在 json 中存在但 Java 对象不存在的属性 
 mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
@@ -155,8 +168,11 @@ mapper.setSerializationInclusion(Include.NON_NULL);
 //忽略值为默认值的属性 
 mapper.setDefaultPropertyInclusion(Include.NON_DEFAULT);
 ```
+
 ### 时间类型格式化
-Jackson 默认会将java.util.Date对象转换成long值（时间戳）,同时也支持将时间转换成格式化的字符串。
+
+Jackson 默认会将 java.util.Date 对象转换成 long 值（时间戳）,同时也支持将时间转换成格式化的字符串。
+
 ```java
 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 objectMapper.setDateFormat(dateFormat);
@@ -165,7 +181,9 @@ String json = objectMapper.writeValueAsString(对象);
 ```
 
 ## Using Optional with Jackson
-一般注意不要将Optional作为field，可将getter返回值改为`Optional<T>`作为代替，在这种情况下，我们若直接将对象序列化，会得到一个含有`empty`和`present`字段的JSON，而不是包含我们存放的数据。  
+
+一般注意不要将 Optional 作为 field，可将 getter 返回值改为 `Optional<T>` 作为代替，在这种情况下，我们若直接将对象序列化，会得到一个含有 `empty` 和 `present` 字段的 JSON，而不是包含我们存放的数据。  
+
 ```json
 {
   "name" : {
@@ -176,20 +194,24 @@ String json = objectMapper.writeValueAsString(对象);
   "birthday" : "2010-01-28"
 }
 ```
-而将JSON反序列化时，我们会得到一个` JsonMappingException`异常。  
 
-而我们实际想要的结果，就是Jackson能将一个空的Optional对象视为null，从非空的Optional中直接拿出实际数据。  
-幸运的是，Jackson拥有一套能够解决JDK8数据类型的模块，这其中也包括Optional。  
-我们只需要加入依赖，再将这个模块注册给`ObjectMapper`即可。  
+而将JSON反序列化时，我们会得到一个 `JsonMappingException` 异常。  
+
+而我们实际想要的结果，就是 Jackson 能将一个空的 Optional 对象视为 null，从非空的 Optional 中直接拿出实际数据。  
+幸运的是，Jackson 拥有一套能够解决 JDK8 数据类型的模块，这其中也包括 Optional。  
+我们只需要加入依赖，再将这个模块注册给 `ObjectMapper` 即可。  
+
 ```gradle
 implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.6'
 ```
+
 ```java
 ObjectMapper mapper = new ObjectMapper();
 mapper.registerModule(new Jdk8Module());
 ```
 
 ## 参考
+
 * https://blog.csdn.net/psh18513234633/article/details/88599509
 * https://blog.csdn.net/wangxuelei036/article/details/107360975/
 * https://www.baeldung.com/jackson-optional

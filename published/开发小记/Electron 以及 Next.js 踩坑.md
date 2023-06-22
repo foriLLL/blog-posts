@@ -1,3 +1,10 @@
+---
+description: "最近毕设准备采用 Electron 将 Web 项目迁移到本地应用，Next.js 相比 CRA 封装了很多开箱即用功能，但在学习过程中还是踩了一些坑，在这里做一个记录。"
+time: 2022-04-12
+heroImage: ""
+tags: []
+---
+
 最近毕设准备采用 Electron 将 Web 项目迁移到本地应用，Next.js 相比 CRA 封装了很多开箱即用功能，但在学习过程中还是踩了一些坑，以下做一个记录。
 
 当我想利用 `next export` 生成静态文件并用 Electron 直接 `loadFile()` 来显示页面时，发现生成的页面没有任何样式和 js 脚本，通过 Chrome 开发者工具检查发现生成的资源路径全部都是 `/_next/...` 这种形式。

@@ -1,5 +1,12 @@
-在 Gradle 项目中安排了两个子模块，一个负责提供核心功能包以及 CLI API，另一个 Spring Boot 负责提供作为REST服务器为前端提供服务。在运行时发现警告：
-`org.apache.logging.log4j.LoggingException: log4j-slf4j-impl cannot be present with log4j-to-slf4j`，在查阅[ slf4j 文档 ](https://www.slf4j.org/codes.html#multiple_bindings)后大意是说SLF4J API 被设计为一次绑定一个且只绑定一个日志框架。如果class path上存在多个绑定，SLF4J 将发出警告，列出这些绑定的位置。  
+---
+description: "本文记录SLF4J 在 classpath 上存在多个绑定发出警告的问题。"
+time: 2022-04-19
+heroImage: ""
+tags: []
+---
+
+在 Gradle 项目中安排了两个子模块，一个负责提供核心功能包以及 CLI API，另一个 Spring Boot 负责提供作为 REST 服务器为前端提供服务。在运行时发现警告：
+`org.apache.logging.log4j.LoggingException: log4j-slf4j-impl cannot be present with log4j-to-slf4j`，在查阅[ slf4j 文档 ](https://www.slf4j.org/codes.html#multiple_bindings)后大意是说 SLF4J API 被设计为一次绑定一个且只绑定一个日志框架。如果 class path 上存在多个绑定，SLF4J 将发出警告，列出这些绑定的位置。  
 思考后应该是 Spring Boot **以核心包模块作为依赖**，而这个包里使用了 `log4j2` 作为日志实现以便于在 CLI API 使用时输出日志，而 Spring Boot 本身也提供日志实现，两个日志实现发生冲突，则报出上述警告。  
 
 > 需要注意的是，SLF4J 发出的警告仅仅是一个警告。即使存在多个绑定，SLF4J 也将选择一个日志框架/实现并与其绑定。SLF4J 选择绑定的方式是由 JVM 决定的，出于所有实际目的，应该认为是随机的。从版本1.6.6开始，SLF4J 将命名它实际绑定到的框架/实现类。
