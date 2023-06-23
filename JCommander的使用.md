@@ -250,6 +250,6 @@ class Parameters {
     private boolean b;
 ```
 
-## 参考：
+## 参考
 * https://blog.csdn.net/adalf90/article/details/80492795
 * http://jcommander.org/#_overview

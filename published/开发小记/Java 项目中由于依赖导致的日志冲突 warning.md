@@ -33,7 +33,7 @@ exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
 ```
 这样在服务器运行过程中生成的日志也会和 CLI 一样被记录在文件中。
 
-## 参考：
+## 参考
 * https://stackoverflow.com/questions/59629214/caused-by-org-apache-logging-log4j-loggingexception-log4j-slf4j-impl-cannot-be
 * https://blog.csdn.net/supingemail/article/details/112944282
 * https://www.slf4j.org/codes.html#multiple_bindings

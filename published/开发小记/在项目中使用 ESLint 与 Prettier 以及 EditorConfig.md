@@ -183,7 +183,7 @@ trim_trailing_whitespace = false
 ```
 
 
-## 参考：
+## 参考
 
 [为什么你要用ESLint，Prettier和EditorConfig](https://juejin.cn/post/6924249306039844872)
 

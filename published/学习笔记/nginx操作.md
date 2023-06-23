@@ -397,5 +397,5 @@ http
 ######Nginx配置文件nginx.conf中文详解#####
 ```
 
-## 参考：
+## 参考
 - [1] [W3Cshool：Nginx 配置文件nginx.conf中文详解](https://www.w3cschool.cn/nginx/nginx-d1aw28wa.html)

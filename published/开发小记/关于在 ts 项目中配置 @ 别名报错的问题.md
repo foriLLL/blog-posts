@@ -220,7 +220,7 @@ tsConfigPaths.register({ baseUrl, paths: outDirPaths });
 ```
 <img alt="20230510144821" src="https://img.foril.fun/20230510144821.png" width=600px style="displat: block; margin:10px auto"/>
 
-## 参考：
+## 参考
 * https://www.npmjs.com/package/tsconfig-paths
 * https://stackoverflow.com/questions/59179787/tsc-doesnt-compile-alias-paths
 * https://github.com/dividab/tsconfig-paths/issues/75

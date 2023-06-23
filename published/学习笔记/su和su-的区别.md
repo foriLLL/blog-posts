@@ -46,7 +46,7 @@ non-login shell：此时shell不会读取 `/etc/profile` 和 `~/.bash_profile`�
 到这里，我们就解决了我们的问题，区分了`su xxx`和`su - xxx`的区别。
 
 
-## 参考：
+## 参考
 - [1] [简书：Linux环境变量总结](https://www.jianshu.com/p/ac2bc0ad3d74)
 
 - [2] [CSDN：login shell和non-login shell](https://blog.csdn.net/zzzhktk/article/details/8221133)

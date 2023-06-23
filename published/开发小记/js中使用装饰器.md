@@ -192,7 +192,7 @@ const c1 = new MyClass();
 c1.message = 123    //error，不允许对只读属性赋值
 ```
 
-## 参考：
+## 参考
 
 - [ES6—Decorator，装饰器简介](https://zhuanlan.zhihu.com/p/55086365)
 

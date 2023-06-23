@@ -164,6 +164,6 @@ class Main {
 ```
 之后便可以愉快地使用日志了！
 
-## 参考：
+## 参考
 * https://www.liaoxuefeng.com/wiki/1252599548343744/1264738568571776 （推荐阅读）
 * https://blog.csdn.net/vbirdbest/article/details/71751835
