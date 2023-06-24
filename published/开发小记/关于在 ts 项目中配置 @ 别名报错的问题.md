@@ -16,7 +16,7 @@ tags: []
     ],
     "ext": "ts,js",
     "ignore": [],
-    "exec": "ts-node -r tsconfig-paths/register ./src/application.ts"
+    "exec": "ts-node ./src/application.ts"
 }
 ```
 
@@ -103,6 +103,7 @@ Require stack:
 这个问题可以使用 `tsconfig-paths` 来解决，这个包周下载量大概有 2400w，估计是比较常用的一个包了。
 具体配置如下：
 ```json
+// nodemon.json
 {
     "watch": [
         "src"
