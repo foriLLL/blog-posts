@@ -1,3 +1,8 @@
+---
+description: "Consensus Algorithm 是分布式系统一个比较流行的话题，其主要目的就是想在多个节点间达成一个对数据状态的共识，这几天为了完成分布式系统的作业，去听了一下 MIT 6.824: Distributed Systems 对于这方面内容的讲解，觉得很有意思，下文对自己的理解和学习过程做一个简单的记录以便之后回顾。"
+time: 2023-02-04 17:53:45+08:00
+---
+
 Consensus Algorithm 是分布式系统一个比较流行的话题，其主要目的就是想在多个节点间达成一个对数据状态的共识，这几天为了完成分布式系统的作业，去听了一下 
 [MIT 6.824: Distributed Systems](https://pdos.csail.mit.edu/6.824/schedule.html) 对于这方面内容的讲解，觉得很有意思，下文对自己的理解和学习过程做一个简单的记录以便之后回顾。这里有一个简单的 [动画演示](http://thesecretlivesofdata.com/raft/) 可以在开始之前有初步的理解，详细的内容可以参考这篇 [论文](https://img.foril.fun/Ongaro%20%E5%92%8C%20Ousterhout%20-%20In%20Search%20of%20an%20Understandable%20Consensus%20Algorithm.pdf)。
 
@@ -5,6 +10,7 @@ Consensus Algorithm 是分布式系统一个比较流行的话题，其主要目
 > <p style="text-align: right">——Wikipedia</p>
 
 ## 什么是 Raft
+
 目前的许多 replicated system 中（GFS、MapReduce 等）都存在 **“单点故障”** 的问题，其原因是为了防止在 replicated state machine 中产生 *split-brain* 问题，即多个 leader 对数据产生分歧（如下文所说，Raft 使用 **大多数原则** 来解决这个问题）。一些 Consensus Algorithm 的产生就是为了进一步压缩宕机的时间。很长一段时间中 Paxos 都占据了这个领域的主导，但由于其理解难度很大，实际实现复杂，导致很多真正的应用都或多或少存在一些不同，因此 Raft 诞生了，他在保证安全性以及基本性能的要求下，算法更为简洁易懂，更适于教学以及实际应用实现。只要大多数机器在正常运行，就可以保证整个协议始终正常运行（五台机器可以忍受两台宕机）。  
 举例来说，假如多个键值对服务器（state machine replication）需要对 client 的操作进行持久化存储，每个服务器下层都运行着 Raft 协议以保证数据的安全性，操作到达服务器后发送到下层的 Raft，由 Raft 决定执行时机和操作是否被提交。
 

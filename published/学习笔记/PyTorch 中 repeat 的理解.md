@@ -1,3 +1,8 @@
+---
+description: "PyTorch 中有很多操作需要记忆，这里对 repeat 和 repeat_interleave 做一个简单的记录。"
+time: 2023-05-06
+---
+
 ```py
 x = torch.tensor([1,2,3])
 # x.shape = torch.Size([3])
@@ -66,6 +71,7 @@ x.repeat_interleave(torch.tensor([2,1,3]),dim=1)
 
 
 ## 区别
+
 我们可以从 `repeat` 和 `repeat_interleave` 这两个函数名本身就能够看出它们的不同之处。
 
 `repeat` 的意思是“重复”，它强调的是对整个张量进行重复操作。这与该函数的行为相符，因为它重复整个张量而不插入新的轴。
