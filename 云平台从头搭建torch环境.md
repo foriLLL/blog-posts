@@ -1,4 +1,4 @@
-1. 安装 cuda toolkit （其实可以只装GPU驱动，不装toolkit）
+1. 安装 cuda toolkit （其实如果使用docker可以只装GPU驱动，不装toolkit，但是云平台docker容器创建后联网有时候会遇到问题）
    1. 安装gcc    apt install gcc
    2. apt install make
    3. 安装cuda toolkit
