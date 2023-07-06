@@ -3,15 +3,18 @@
     "iconLinks": [
         {
             "iconSVG": "/static/gitee.svg",
-            "url": "https://gitee.com/foril"
+            "url": "https://gitee.com/foril",
+            "description": "码云"
         },
         {
             "iconSVG": "/static/mail.svg",
-            "url": "mailto:1571825323@qq.com"
+            "url": "mailto:1571825323@qq.com",
+            "description": "邮箱"
         },
         {
             "iconSVG": "/static/github.svg",
-            "url": "https://github.com/foriLLL"
+            "url": "https://github.com/foriLLL",
+            "description": "GitHub"
         }
     ]
 }
