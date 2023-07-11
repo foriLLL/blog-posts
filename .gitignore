@@ -1,5 +1,4 @@
-img
-*/img
-
-**/.DS_Store
+img/
+/static/
+.DS_Store
 /.vscode/
