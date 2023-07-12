@@ -8,7 +8,7 @@
 * 喜欢音乐🎶、电影📽、摄影📷
 
 ## 联系方式🤙
-* 💬QQ：1571825323
+
 * 📧邮箱：  <a href="mailto:1571825323@qq.com" title="邮件">点击发送邮件</a>  
 * <a target="_blank" rel="noopener noreferrer" href='https://gitee.com/foril' title="gitee">gitee</a>
 * <a target="_blank" rel="noopener noreferrer" href='https://github.com/foriLLL' title="github">github</a>
@@ -24,10 +24,10 @@
 ### 开发技术栈🛠  
 |网站部分  |所用技术栈  |  
 |:-----:|:----:|
-|前端  |React.js + TypeScript |  
+|前端  |Next.js + TypeScript |  
 |部分组件  |antDesign  |  
 |内容编写  |markdown + LaTeX |  
-|后端  |express + mysql  |  
+|后端  |koa  |  
 
 > 向光生长  
 > Forever, foriL  
