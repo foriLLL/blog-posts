@@ -26,6 +26,36 @@ public class OuterClass {
 在这种定义方式下，普通内部类对象依赖外部类对象而存在，即在创建一个普通内部类对象时 **首先需要创建其外部类对象**，在外部类的函数中才可以创造内部类实例。  
 这样生成的内部类对象就像是外部类对象的一个属性，可以访问外部类的 **所有访问权限** 的属性。
 
+```java
+// OuterClass.java
+public class OuterClass {
+    public int i;
+    public OuterClass(int i) {
+        this.i = i;
+    }
+    public class InnerClass {
+        public void print() {
+            System.out.println(i);
+        }
+    }
+}
+
+// Main.java
+public class Main {
+    public static void main(String[] args) {
+        OuterClass o = new OuterClass(23);
+        OuterClass.InnerClass i = o.new InnerClass();
+        i.print();  // 23
+    }
+}
+```
+在上面这个例子中，Main 类可以通过先创建一个 OuterClass 对象，然后再通过这个对象创建一个 InnerClass 对象，最后通过这个 InnerClass 对象访问 OuterClass 对象的属性。要注意，这里的 InnerClass 对象必须依赖 OuterClass 对象而存在的，因此在创建 InnerClass 对象之前必须先创建 OuterClass 对象。  
+同时，如果 InnerClass 的修饰符是 private 的话，那么在 Main 类中就无法创建 InnerClass 对象，如果 print 方法的修饰符是 private 的话，那么在 Main 类中可以是礼花 InnerClass，但无法调用 print 方法。  
+这里的 InnerClass 对象就像是 OuterClass 对象的一个属性，可以访问 OuterClass 对象的所有访问权限的属性，但是 OuterClass 对象却无法访问 InnerClass 对象的属性，因为 InnerClass 对象的定义域只在 OuterClass 对象中，出了这个定义域，InnerClass 对象就不存在了，因此 OuterClass 对象无法访问 InnerClass 对象的属性。
+
+```java
+
+
 ## 静态内部类
 
 静态内部类作为一个外部类的静态成员而存在，创建一个类的静态内部类对象 **不需要依赖其外部类对象** 。但同时，静态内部类中也无法访问外部类的 **非静态成员**。
