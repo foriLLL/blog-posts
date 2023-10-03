@@ -62,9 +62,13 @@ Task 本身包括:
 3. Output：操作修改或生成的文件和目录
 
 ### Plugins
+
 Plugin 允许你在构建中引入任务、文件和依赖项配置之外的新概念。例如，大多数语言插件都会将 source sets 的概念添加到构建中。
 
 插件提供了跨多个项目重用逻辑和配置的方法。使用插件，您可以编写一次任务，并在多个构建中使用它。**或者您可以将常见的配置(如日志记录、依赖项和版本管理)存储在一个地方。** 这减少了构建脚本中的重复。适当地用插件对构建过程建模可以极大地提高易用性和效率。
+
+Java plugin - tasks
+<img alt="Java_plugin_tasks" src="https://img.foril.fun/Java_plugin_tasks.png" width=600px style="displat: block; margin:10px auto"/>
 
 ### Build Phases
 
