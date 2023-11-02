@@ -172,7 +172,7 @@ TS_NODE_BASEURL=./build_tsc node -r tsconfig-paths/register main.js
     }
 }
 ```
-<img alt="20230510121544" src="https://img.foril.fun/20230510121544.png" width=300px style="displat: block; margin:10px auto"/>
+<img alt="20230510121544" src="https://img.foril.fun/20230510121544.png" width=300px style="display: block; margin:10px auto"/>
 
 ***这里需要特别注意这种方法生成的 js 文件中是包含别名信息的，不能直接使用 node 运行，必须注册 `tsconfig-paths` 模块，这和上面使用 `tsc-alias` 直接将 js 中的别名替换的方法不同，`tsc-alias` 生成的 js 文件可以直接使用 node 运行。***
 
@@ -219,7 +219,7 @@ const outDirPaths = Object.entries(paths).reduce(
 
 tsConfigPaths.register({ baseUrl, paths: outDirPaths });
 ```
-<img alt="20230510144821" src="https://img.foril.fun/20230510144821.png" width=600px style="displat: block; margin:10px auto"/>
+<img alt="20230510144821" src="https://img.foril.fun/20230510144821.png" width=600px style="display: block; margin:10px auto"/>
 
 ## 参考
 * https://www.npmjs.com/package/tsconfig-paths

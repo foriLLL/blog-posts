@@ -13,7 +13,7 @@ squash 功能可以将多个 commit 合并成一个，这样可以使得 commit 
 
 以下内容是一个 mock 出来的 Git 仓库内容。
 
-<img alt="mock 仓库 git graph" src="https://img.foril.fun/mock 仓库 git graph.png" width=200px style="displat: block; margin:10px auto"/>
+<img alt="mock 仓库 git graph" src="https://img.foril.fun/mock 仓库 git graph.png" width=200px style="display: block; margin:10px auto"/>
 
 接下来我想把 `add 45` 和 `add 67` 合并成一个 commit，于是我就在 branch a 上执行了 `git rebase -i HEAD~2`，然后就进入了一个交互式的编辑界面（vim）。
 
@@ -84,11 +84,11 @@ add 67
 #       modified:   1.txt
 ```
 
-<img alt="after squash" src="https://img.foril.fun/after squash.png" width=250px style="displat: block; margin:10px auto"/>
+<img alt="after squash" src="https://img.foril.fun/after squash.png" width=250px style="display: block; margin:10px auto"/>
 
 至此，我就完成了合并 commit 的操作。接下来，使用 `git rebase main` 即可将分支 a 上的 commit 合并到 main 分支上。
 
-<img alt="after rebase" src="https://img.foril.fun/after rebase.png" width=250px style="displat: block; margin:10px auto"/>
+<img alt="after rebase" src="https://img.foril.fun/after rebase.png" width=250px style="display: block; margin:10px auto"/>
 
 这样一整套流程的好处是，可以将一些不必要的 commit 合并成一个，从而使得 commit history 更加清晰。但代价就是会将之前在 a 上详细的提交过程合并成一个 commit，这样就会丢失一些细节。
 
@@ -96,7 +96,7 @@ add 67
 
 在上面这个例子中，我们在合并 a 时可以直接使用 `git merge --squash a` 来将 a 分支上的 commit 合并到 main 分支上，这样就不会丢失之前的提交历史了，但这样做的缺点是很难将新的提交和 a 中具体的 commit 对应起来，因为这些 commit 已经被合并成一个了。
 
-<img alt="merge squash" src="https://img.foril.fun/merge squash.png" width=300px style="displat: block; margin:10px auto"/>
+<img alt="merge squash" src="https://img.foril.fun/merge squash.png" width=300px style="display: block; margin:10px auto"/>
 
 ## 参考
 

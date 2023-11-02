@@ -11,7 +11,7 @@ tags: []
 ## NVIDIA Container Toolkit
 NVIDIA Container Toolkit 是一个开源软件包，他提供了一组容器的运行时库和工具，能够**自动地配置容器使用宿主机的 GPU 资源**。
 
- <img alt="20230325115853" src="https://img.foril.fun/20230325115853.png" width=600px style="displat: block; margin:10px auto"/>
+ <img alt="20230325115853" src="https://img.foril.fun/20230325115853.png" width=600px style="display: block; margin:10px auto"/>
 
 ## 安装
 在安装 Container Toolkit 前需要在你的 Linux 发行版上先安装 GPU 的驱动，不要求安装 CUDA Toolkit，但需要安装 NVIDIA 驱动程序（CUDA Toolkit 包含 NVIDIA 驱动）。
