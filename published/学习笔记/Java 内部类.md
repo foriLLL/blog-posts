@@ -50,11 +50,32 @@ public class Main {
 }
 ```
 在上面这个例子中，Main 类可以通过先创建一个 OuterClass 对象，然后再通过这个对象创建一个 InnerClass 对象，最后通过这个 InnerClass 对象访问 OuterClass 对象的属性。要注意，这里的 InnerClass 对象必须依赖 OuterClass 对象而存在的，因此在创建 InnerClass 对象之前必须先创建 OuterClass 对象。  
-同时，如果 InnerClass 的修饰符是 private 的话，那么在 Main 类中就无法创建 InnerClass 对象，如果 print 方法的修饰符是 private 的话，那么在 Main 类中可以是礼花 InnerClass，但无法调用 print 方法。  
-这里的 InnerClass 对象就像是 OuterClass 对象的一个属性，可以访问 OuterClass 对象的所有访问权限的属性，但是 OuterClass 对象却无法访问 InnerClass 对象的属性，因为 InnerClass 对象的定义域只在 OuterClass 对象中，出了这个定义域，InnerClass 对象就不存在了，因此 OuterClass 对象无法访问 InnerClass 对象的属性。
+同时，如果 InnerClass 的修饰符是 private 的话，那么在 Main 类中就无法创建 InnerClass 对象（理解 InnerClass 为 OuterClass 的一个私有属性）。如果 print 方法的修饰符是 private 的话，那么在 Main 类中可以实例化 InnerClass，但无法调用 print 方法。
+
+这里的 InnerClass 对象就像是 OuterClass 对象的一个属性，可以访问 OuterClass 对象的所有访问权限的属性，但是 OuterClass 对象却无法访问 InnerClass 对象的属性，这是因为 Java 的访问控制机制设计为每个类控制对其自身成员的访问，即使这个类是另一个类的内部类。
 
 ```java
+public class OuterClass {
+    private int outerField = 10;
 
+    public class InnerClass {
+        private int innerField = 20;
+
+        public int getInnerField() {
+            return innerField;
+        }
+    }
+
+    public void accessInner() {
+        InnerClass inner = new InnerClass();
+        System.out.println("Inner field value: " + inner.getInnerField());
+    }
+}
+```
+
+在这个例子中，InnerClass 有一个私有属性 innerField，以及一个公共方法 getInnerField() 用于访问这个属性。虽然 OuterClass 的 accessInner 方法可以创建 InnerClass 的实例并调用 getInnerField()，但是 OuterClass 直接访问 innerField 是不可能的，因为 innerField 是 InnerClass 的私有属性。
+
+也就是说，尽管 InnerClass 定义在 OuterClass 之内，OuterClass 实例无法直接访问 InnerClass 的私有成员。OuterClass 只能通过 InnerClass 提供的公共接口（例如 getInnerField 方法）来间接访问这些成员。
 
 ## 静态内部类
 
@@ -95,7 +116,7 @@ public class OuterClass {
         Arrays.sort(list, new Comparator<Square>() {
             @Override
             public int compare(Square o1, Square o2) {
-                return 0;
+                 Double.compare(s1.width * s1.length, s2.width * s2.length);
             }
         });
     }
@@ -115,7 +136,7 @@ class Square {
 
 ## 局部内部类
 
-局部内部类使用的比较少，其**声明在一个方法体 / 一段代码块的内部**，而且不在定义类的定义域之内便无法使用，其提供的功能使用匿名内部类都可以实现，而本身匿名内部类可以写得比它更简洁，因此局部内部类用的比较少。
+局部内部类使用的比较少，其 **声明在一个方法体 / 一段代码块的内部**，而且不在这个类的定义域之内便无法使用，其提供的功能使用匿名内部类都可以实现，而本身匿名内部类可以写得比它更简洁，因此局部内部类用的比较少。
 
 ```java
 public class InnerClassTest {
