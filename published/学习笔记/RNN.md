@@ -138,23 +138,25 @@ $I_t$ 是输入门，$F_t$ 是遗忘门，$O_t$ 是输出门，这三个门的�
 
 结合图片，我们可以看到 LSTM 的计算流程如下：
 
-1. 首先，我们需要计算输入门 $I_t$、遗忘门 $F_t$ 和输出门 $O_t$，这三个门的计算方式都是一样的，都是通过当前时间步的输入 $X_t$ 和上一个时间步的隐状态 $H_{t-1}$，利用全连接层和激活函数来计算当前时间步的隐状态，然后再通过 sigmoid 函数来得到门的开关，即
-   $$
-    \begin{split}\begin{aligned}
-    \mathbf{I}_t &= \sigma(\mathbf{X}_t \mathbf{W}_{xi} + \mathbf{H}_{t-1} \mathbf{W}_{hi} + \mathbf{b}_i),\\
-    \mathbf{F}_t &= \sigma(\mathbf{X}_t \mathbf{W}_{xf} + \mathbf{H}_{t-1} \mathbf{W}_{hf} + \mathbf{b}_f),\\
-    \mathbf{O}_t &= \sigma(\mathbf{X}_t \mathbf{W}_{xo} + \mathbf{H}_{t-1} \mathbf{W}_{ho} + \mathbf{b}_o),
-    \end{aligned}\end{split}
-  $$
-2. 然后，我们需要计算候选记忆元 $\tilde{C}_t$，他的计算和三个门的计算类似，但是使用 tanh 函数作为激活函数，函数的值范围为 $(-1, 1)$，即
+- 首先，我们需要计算输入门 $I_t$、遗忘门 $F_t$ 和输出门 $O_t$，这三个门的计算方式都是一样的，都是通过当前时间步的输入 $X_t$ 和上一个时间步的隐状态 $H_{t-1}$，利用全连接层和激活函数来计算当前时间步的隐状态，然后再通过 sigmoid 函数来得到门的开关，即
+
+$$
+\begin{split}\begin{aligned}
+\mathbf{I}_t &= \sigma(\mathbf{X}_t \mathbf{W}_{xi} + \mathbf{H}_{t-1} \mathbf{W}_{hi} + \mathbf{b}_i),\\
+\mathbf{F}_t &= \sigma(\mathbf{X}_t \mathbf{W}_{xf} + \mathbf{H}_{t-1} \mathbf{W}_{hf} + \mathbf{b}_f),\\
+\mathbf{O}_t &= \sigma(\mathbf{X}_t \mathbf{W}_{xo} + \mathbf{H}_{t-1} \mathbf{W}_{ho} + \mathbf{b}_o),
+\end{aligned}\end{split}
+$$
+
+- 然后，我们需要计算候选记忆元 $\tilde{C}_t$，他的计算和三个门的计算类似，但是使用 tanh 函数作为激活函数，函数的值范围为 $(-1, 1)$，即
   $$
     \tilde{\mathbf{C}}_t = \tanh(\mathbf{X}_t \mathbf{W}_{xc} + \mathbf{H}_{t-1} \mathbf{W}_{hc} + \mathbf{b}_c).
   $$
-1. 接着，我们需要计算记忆元 $C_t$，通过遗忘门 $F_t$ 控制上一个时间步的记忆元 $C_{t-1}$ 的流出程度，通过输入门 $I_t$ 控制当前时间步的候选记忆元 $\tilde{C}_t$ 的流入程度，即
+- 接着，我们需要计算记忆元 $C_t$，通过遗忘门 $F_t$ 控制上一个时间步的记忆元 $C_{t-1}$ 的流出程度，通过输入门 $I_t$ 控制当前时间步的候选记忆元 $\tilde{C}_t$ 的流入程度，即
   $$
     \mathbf{C}_t = \mathbf{F}_t \odot \mathbf{C}_{t-1} + \mathbf{I}_t \odot \tilde{\mathbf{C}}_t.
   $$
-1. 最后，我们需要计算隐状态 $H_t$，通过输出门 $O_t$ 控制记忆元 $C_t$ 的流出程度，即
+- 最后，我们需要计算隐状态 $H_t$，通过输出门 $O_t$ 控制记忆元 $C_t$ 的流出程度，即
   $$
     \mathbf{H}_t = \mathbf{O}_t \odot \tanh(\mathbf{C}_t).
   $$
