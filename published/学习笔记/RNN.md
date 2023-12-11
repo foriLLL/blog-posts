@@ -332,6 +332,20 @@ sequence_mask(X, torch.tensor([1, 2]))
 
 <img alt="encoder-decoder details" src="https://img.foril.fun/encoder-decoder details.svg" width=400px style="display: block; margin:10px auto"/>
 
+此外，对于一个 batch 批次中序列长度不同的数据，我们需要通过 `pad_sequence`、`pack_padded_sequence` 和 `pad_packed_sequence` 来进行处理：
+
+1. **pad_sequence**: 这是处理一批不同长度的序列的第一步。在这一步中，您对每个序列进行填充（padding），使得这一批次中的所有序列长度相同。通常，这是通过在序列的末尾添加特殊的填充标记（如0）来实现的。在 PyTorch 里面一般是使用 DataLoader 进行数据加载，返回 mini-batch 形式的数据，再将此数据喂给网络进行训练。我们一般会自定义一个 collate_fn 函数，完成对数据的填充。
+
+2. **pack_padded_sequence**: 在进行了填充之后，接下来使用`pack_padded_sequence`对这些填充后的序列进行打包。这一步是关键，因为它告诉LSTM网络哪些是序列的实际数据部分，哪些是填充部分。LSTM处理时将只关注非填充部分，这有助于提高效率，并且防止模型学习到与任务无关的信息。
+
+3. **LSTM处理**: 经过打包的数据送入LSTM层进行处理。
+
+4. **pad_packed_sequence**: 在LSTM处理之后，使用`pad_packed_sequence`对输出进行解包。这将输出恢复到填充前的维度，包括填充部分。这一步是为了使得数据能够以统一的格式进行后续处理，例如通过一个全连接层。
+
+5. **后续处理**: 对LSTM的输出进行进一步的处理，比如通过全连接层和激活函数等。
+
+这个流程确保了即使是在处理不同长度的序列时，神经网络也能有效地工作，同时避免了在模型训练时学习到无关的填充数据。
+
 ***
 
 以上就是我个人对于 RNN 的一些理解的总结，以便日后查阅，个人理解比较浅薄，对于深层次的梯度计算和训练细节没有太多涉及，难免会有错误的地方，欢迎指正。
