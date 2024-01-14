@@ -4,6 +4,7 @@ time: 2022-11-28
 ---
 
 ## 题目特征
+
 数位 DP：用来解决一类特定问题，这种问题比较好辨认，一般具有这几个特征：
 * 要求统计满足一定条件的数的数量（即，最终目的为计数）；
 * 这些条件经过转化后可以使用「数位」的思想去理解和判断；
@@ -11,6 +12,7 @@ time: 2022-11-28
 * 上界很大（比如 $10^8$），暴力枚举验证会超时。
 
 ## 基本原理
+
 考虑人类计数的方式，最朴素的计数就是从小到大开始依次加一。但我们发现对于位数比较多的数，这样的过程中有许多重复的部分。例如，从 7000 数到 7999、从 8000 数到 8999、和从 9000 数到 9999 的过程非常相似，它们都是后三位从 000 变到 999，不一样的地方只有千位这一位，所以我们可以把这些过程归并起来，将这些过程中产生的计数答案也都存在一个通用的数组里。此数组根据题目具体要求设置状态，用递推或 DP 的方式进行状态转移。
 
 数位 DP 中通常会利用常规 **计数问题技巧**，比如把一个区间内的答案拆成两部分相减（即 $ans_{\lbrack l, r \rbrack} = ans_{\lbrack 0, r \rbrack} - ans_{\lbrack 0, l-1 \rbrack}$）。
@@ -19,9 +21,11 @@ time: 2022-11-28
 
 针对许多需要排除重复结果的题目，通常可以引入 mask 来记录已经使用过的数字，下面提供一个带注释的模板。
 
-```java
-// https://leetcode.cn/problems/count-special-integers/
+## 例题
 
+### [2376. 统计特殊整数](https://leetcode.cn/problems/count-special-integers/)
+
+```java
 class Solution {
     int[][] memo;   // memo[i][mask]记录当前选择顺位为i，已选状态为mask时，构造第i位及后面位的合法方案数
     char[] s;
@@ -35,7 +39,7 @@ class Solution {
         i:当前选择的数字位次，从0开始
         mask:前面已择数字的状态，是一个10位的二进制数，如:0000000010就代表前面已经选了1
         isLimit:boolean类型，代表当前位选择是否被前面位的选择限制了；
-            如n=1234，前面选了12，选第3位的时候会被限制在0~3，isLimit=true；否则是0~9，isLimit=false
+            如最大的数n=1234，前面选了12都是贴着最大的选择，那么 isLimit=true，选第3位的时候会被限制在0~3，否则超过n；否则是0~9，isLimit=false
         hasNum:表示前面是否已经选择了数字，若选择了就为true(识别直接构造低位的情况)
         时间复杂度:O(1024*M*10) 空间复杂度:O(1024*M)
         记忆化DFS的时间复杂度=状态数*每一次枚举的情况数
@@ -85,6 +89,27 @@ class Solution {
 }
 ```
 
+### [233.数字1的个数](https://leetcode.cn/problems/number-of-digit-one/)
+
+```py
+class Solution:
+    def countDigitOne(self, n: int) -> int:
+        s = str(n)
+        
+        # 这里没有 mask，所以可以不需要 isNum，全为 0 也是一种状态，对答案没有影响
+        @cache
+        def f(i: int, cnt1: int, is_limit: bool) -> int:
+            if i == len(s): return cnt1
+            res = 0
+            upper = int(s[i]) if is_limit else 9
+            for d in range(upper + 1):  # 枚举要填入的数字 d
+                res += f(i + 1, cnt1 + (d == 1), is_limit and d == up)
+            return res
+        return f(0, 0, True)
+```
+
 ## 参考
+
 * https://oi-wiki.org/dp/number/
 * https://leetcode.cn/problems/count-special-integers/solution/shu-wei-dp-mo-ban-by-endlesscheng-xtgx/
+* https://leetcode.cn/problems/number-of-digit-one/solutions/1750339/by-endlesscheng-h9ua/
