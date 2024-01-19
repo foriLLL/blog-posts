@@ -1,19 +1,32 @@
-当我们自己开发的Java程序希望通过命令行(CLI)调用时，可以自己在main函数的参数args中解析，但这样的做法极其复杂且常常缺乏鲁棒性。为了不在这里浪费时间，JCommander应运而生。  
+---
+description: 当我们自己开发的 Java 程序希望通过命令行（CLI）调用时，可以自己在 main 函数的参数 args 中解析，但这样的做法极其复杂且常常缺乏鲁棒性。为了不在这里浪费时间，JCommander 应运而生。  
+time: 2022-06-28 19:31:15+08:00
+tags: 
+heroImage: 
+---
+
+
+
+当我们自己开发的 Java 程序希望通过命令行（CLI）调用时，可以自己在 main 函数的参数 args 中解析，但这样的做法极其复杂且常常缺乏鲁棒性。为了不在这里浪费时间，JCommander 应运而生。  
+
 > "Because life is too short to parse command line parameters" 
 
-## 什么是JCommander
-JCommander是Java解析命令行参数的工具，能够帮助我们快速开发CLI程序，Java在命令行交互的应用，还有很多工具。另一个使用比较广泛的是[Apache Commons CLI](http://commons.apache.org/proper/commons-cli/index.html)，它比JCommander支持更多的命令行风格，但是扩展能力不够。  
+## 什么是 JCommander
 
-JCommander特点主要有：
+JCommander 是 Java 解析命令行参数的工具，能够帮助我们快速开发 CLI 程序，Java 在命令行交互的应用，还有很多工具。另一个使用比较广泛的是 [Apache Commons CLI](http://commons.apache.org/proper/commons-cli/index.html)，它比 JCommander 支持更多的命令行风格，但是扩展能力不够。  
+
+JCommander 特点主要有：
 * **注解驱动**  
-它的核心功能**命令行参数定义**是基于注解的，这也是选择用它的主要原因。我们可以轻松做到命令行参数与属性的映射，属性除了是String类型，还可以是Integer、Boolean，甚至是File、集合类型。
+它的核心功能 **命令行参数定义** 是基于注解的，这也是选择用它的主要原因。我们可以轻松做到命令行参数与属性的映射，属性除了是 String 类型，还可以是Integer、Boolean，甚至是 File、集合类型。
 * **功能丰富**  
 它同时支持 `POSIX` 和 `Java` 两种风格的两种命令行风格，并且提供了输出帮助文档的能力(`usage()`)，还提供了国际化的支持。
 * **高度扩展**  
 可高度自定义所需要的各类选项以及对域的限制。
 
 ## 基本使用
-一般来说，你只需要给你的fields加入注解，就可以使用JCommander来解析命令行：定义一个类，给有需要的field加入`@Parameter`注解。
+
+一般来说，你只需要给你的 fields 加入注解，就可以使用 JCommander 来解析命令行：定义一个类，给有需要的 field 加入`@Parameter`注解。
+
 ```java
 import com.beust.jcommander.Parameter;
 
@@ -31,7 +44,9 @@ public class Args {
   private boolean debug = false;
 }
 ```
-然后只需要让JCommander去解析：
+
+然后只需要让 JCommander 去解析：
+
 ```java
 class Main {
     @Parameter(names={"--length", "-l"})
@@ -55,50 +70,71 @@ class Main {
 ```
 
 ## 参数类型
-代表参数的字段可以是任何类型。基本类型（Integer、Boolean等……）默认支持，您可以编写**类型转换器**来支持任何其他类型（File等……）。
+
+代表参数的字段可以是任何类型。基本类型（Integer、Boolean等……）默认支持，您可以编写 **类型转换器** 来支持任何其他类型（File 等……）。
+
 ### Boolean
-对于Boolean类型的域，JCommander默认其参数数量（arity）为0，就是说只要有这个参数就默认为true，没有就为false。
+
+对于 Boolean 类型的域，JCommander 默认其参数数量（arity）为0，就是说只要有这个参数就默认为 true，没有就为 false。
+
 ```java
 @Parameter(names = "-debug", description = "Debug mode")
 private boolean debug = false;
 ```
+
 如果向指定这个参数默认为出，可以将他的参数数量设置为1，这样就需要明确指出这个参数值的值才可以运行。
+
 ```java
 @Parameter(names = "-debug", description = "Debug mode", arity = 1)
 private boolean debug = true;
 ```
-需要使用`program -debug true`或`program -debug false`来调用。
 
-> 当被装饰的域的类型是String、Integer、int、Long或者long时，JCommander会自动将值转化为对应的类型。当传入的参数不能被转化为对应类型时，会抛出异常。
+需要使用 `program -debug true` 或 `program -debug false` 来调用。
+
+> 当被装饰的域的类型是 String、Integer、int、Long 或者 long时，JCommander 会自动将值转化为对应的类型。当传入的参数不能被转化为对应类型时，会抛出异常。
 
 ### Lists
-当域的类型是List时，JCommander会将其转为一个可出现多次的选项。比如：
+
+当域的类型是 List 时，JCommander 会将其转为一个可出现多次的选项。比如：
+
 ```java
 @Parameter(names = "-host", description = "The host")
 private List<String> hosts = new ArrayList<>();
 ```
-可以使用以下命令来向hosts传入两个值：
+
+可以使用以下命令来向 hosts 传入两个值：
+
 ```java
 java Main -host host1 -verbose -host host2
 ```
+
+
 ### 密码
+
 如果您的参数之一是密码或您不希望在命令行历史记录中显示的其他值，则可以将其声明为密码类型，然后 JCommander 将要求您在控制台中输入它。
+
 ```java
 public class ArgsPassword {
   @Parameter(names = "-password", description = "Connection password", password = true)
   private String password;
 }
 ```
+
 当你在程序中运行时，你会得到如下的提示：
+
 ```sh
 Value for -password (Connection password):
 ```
-需要在输入密码后才能继续，在Java5及以前版本中，密码会被回显，需要设置`echoInput=false`来取消回显；而在Java6及之后版本中密码默认不会显示。
+
+需要在输入密码后才能继续，在 Java5 及以前版本中，密码会被回显，需要设置 `echoInput=false` 来取消回显；而在 Java6 及之后版本中密码默认不会显示。
 
 ## 自定义类型
+
 ### Single value
-JCommander提供IStringConverter和IParameterSplitter两个接口来将参数绑定到自定义类型或更改JCommander拆分参数的方式（默认为逗号拆分）。  
+
+JCommander 提供 IStringConverter 和 IParameterSplitter 两个接口来将参数绑定到自定义类型或更改 JCommander 拆分参数的方式（默认为逗号拆分）。  
 很多时候，我们的应用程序需要通过命令行解析更复杂的类型（例如文件、主机名、列表等）。为此，您可以通过实现以下接口来编写类型转换器：
+
 ```java
 public interface IStringConverter<T> {
   T convert(String value);
@@ -111,33 +147,45 @@ public class FileConverter implements IStringConverter<File> {
   }
 }
 ```
-然后只需要在对应的域上加上注解，并加入converter属性。
+
+然后只需要在对应的域上加上注解，并加入 converter 属性。
+
 ```java
 @Parameter(names = "-file", converter = FileConverter.class)
 File file;
 ```
+
 ### List value
-如果是一个List域，默认会调用List<>中的泛型类的converter，并以逗号为分隔符，将字符串拆分后一个个作为输入得到List。
+
+如果是一个 List 域，默认会调用 `List<>` 中的泛型类的 converter，并以逗号为分隔符，将字符串拆分后一个个作为输入得到List。
+
 ```java
 @Parameter(names = "-files", converter = FileConverter.class)
 List<File> files;
 ```
+
 应该使用如下命令调用。
+
 ```sh
 $ java App -files file1,file2,file3
 ```
-也可以IStringConverter中的泛型改为List，例如`IStringConverter<List<File>>`，然后手动解析字符串中的逗号等分隔符，然后加入List中返回。
 
-如果觉得在每一个域上都需要加入converter很麻烦，可以用ConverterFactory在JCommander实例上加入一个实现了指定接口的工厂类实例，详细看[这里](http://jcommander.org/#single-value)。
+也可以 IStringConverter 中的泛型改为 List，例如 `IStringConverter<List<File>>`，然后手动解析字符串中的逗号等分隔符，然后加入 List 中返回。
+
+如果觉得在每一个域上都需要加入 converter 很麻烦，可以用 ConverterFactory 在 JCommander 实例上加入一个实现了指定接口的工厂类实例，详细看 [这里](http://jcommander.org/#single-value)。
 
 ### 分隔符
-给`@Parameter`的`splitter=`属性传入一个实现了`IParameterSplitter`接口的类，可以自定义分隔符。
+
+给 `@Parameter` 的 `splitter=` 属性传入一个实现了 `IParameterSplitter` 接口的类，可以自定义分隔符。
+
 ```java
 public interface IParameterSplitter {
   List<String> split(String value);
 }
 ```
+
 如下是一个以分号为分隔符的接口实现：
+
 ```java
 public static class SemiColonSplitter implements IParameterSplitter {
     public List<String> split(String value) {
@@ -150,10 +198,14 @@ public static class SemiColonSplitter implements IParameterSplitter {
 @Parameter(names = "-files", converter = FileConverter.class, splitter = SemiColonSplitter.class)
 List<File> files;
 ```
+
 ## 参数校验
+
 ### 单个参数校验
-单个参数校验用于那些指定参数有一定限制的情况，比如用Integer记录年龄必须为非负数，String的长度必须小于10等限制。  
-只需要在`@Paramter`注解中加入`validateWith=`属性，传入一个实现了`IParameterValidator`接口的类即可。
+
+单个参数校验用于那些指定参数有一定限制的情况，比如用 Integer 记录年龄必须为非负数，String 的长度必须小于 10 等限制。  
+只需要在 `@Paramter` 注解中加入 `validateWith=` 属性，传入一个实现了 `IParameterValidator` 接口的类即可。
+
 ```java
 // 接口
 public interface IParameterValidator {
@@ -190,11 +242,15 @@ private Integer age;
 @Parameter(names = "-count", validateWith = { PositiveInteger.class, CustomOddNumberValidator.class })
 private Integer value;
 ```
+
 ### 全局参数验证
+
 全局参数验证用于多个参数之间的限制关系，比如不能同时出现的参数等情况。这种情况下就不能单纯利用注解中的参数验证来实现，需要自行通过获得参数后在代码中加入限制。
 
 ## 主参数
-到目前为止，我们看到的所有`@Parameter`注解都定义了一个名为`names`的属性。您可以定义一个（**最多一个**）参数而不使用任何此类属性。此参数可以是列表或单个字段（例如字符串或具有转换器的类型，例如文件），在这种情况下，只需要一个主要参数。
+
+到目前为止，我们看到的所有 `@Parameter` 注解都定义了一个名为 `names` 的属性。您可以定义一个（**最多一个**）参数而不使用任何此类属性。此参数可以是列表或单个字段（例如字符串或具有转换器的类型，例如文件），在这种情况下，只需要一个主要参数。
+
 ```java
 @Parameter(description = "Files")
 private List<String> files = new ArrayList<>();
@@ -202,14 +258,19 @@ private List<String> files = new ArrayList<>();
 @Parameter(names = "-debug", description = "Debugging level")
 private Integer debug = 1;
 ```
+
 这样可以允许你解析以下命令：
+
 ```bash
 $ java Main -debug file1 file2
 ```
-files域就会得到`file1`和`file2`两个字符串。
+
+files 域就会得到 `file1` 和 `file2` 两个字符串。
 
 ## 参数分隔符
+
 默认情况下，参数由空格分隔，但您可以更改此设置以允许使用不同的分隔符：
+
 ```java
 @Parameters(separators = "=")
 public class SeparatorEqual {
@@ -217,21 +278,30 @@ public class SeparatorEqual {
   private Integer level = 2;
 }
 ```
+
 之后便可以使用
+
 ```bash
 $ java Main -log:3
 $ java Main -level=42
 ```
+
+
 ## 帮助属性
-如果您的参数之一用于显示一些帮助或用法，则需要使用`help`属性：
+
+如果您的参数之一用于显示一些帮助或用法，则需要使用 `help` 属性：
+
 ```java
 @Parameter(names = "--help", help = true)
 private boolean help;
 ```
-如果您省略此布尔值，JCommander将在尝试验证您的命令并发现您未指定某些必需参数时发出错误消息。
+
+如果您省略此布尔值，JCommander 将在尝试验证您的命令并发现您未指定某些必需参数时发出错误消息。
 
 ## 使用文档
-您可以在用于解析命令行的 JCommander 实例上调用`.usage()`以生成程序理解的所有选项的摘要：
+
+您可以在用于解析命令行的 JCommander 实例上调用 `.usage()` 以生成程序理解的所有选项的摘要：
+
 ```bash
 Usage: <main class> [options]
   Options:
@@ -240,7 +310,9 @@ Usage: <main class> [options]
   * -log, -verbose  Level of verbosity (default: 1)
     -long           A long number (default: 0)
 ```
-您可以通过在 JCommander 对象上调用`.setProgramName()`来自定义程序的名称。前面有星号的选项是必需的。您还可以通过设置`@Parameter`注解的`order`属性来指定调用`.usage()`时每个选项的显示顺序：
+
+您可以通过在 JCommander 对象上调用 `.setProgramName()` 来自定义程序的名称。前面有星号的选项是必需的。您还可以通过设置 `@Parameter` 注解的 `order` 属性来指定调用 `.usage()` 时每个选项的显示顺序：
+
 ```java
 class Parameters {
     @Parameter(names = "--importantOption", order = 0)
@@ -251,5 +323,6 @@ class Parameters {
 ```
 
 ## 参考
+
 * https://blog.csdn.net/adalf90/article/details/80492795
 * http://jcommander.org/#_overview

@@ -1,3 +1,10 @@
+---
+description: 简单记录 Java 中的日志框架 slf4j 和 log4j2 的使用。
+time: 2022-01-24 19:31:15+08:00
+tags: 
+heroImage: 
+---
+
 ## 什么是日志
 什么是日志？日志就是Logging，它的目的是为了取代`System.out.println()`。  
 输出日志，而不是用System.out.println()，好处众多

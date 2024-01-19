@@ -24,6 +24,7 @@ Attention 机制最早从图像领域诞生，于 90 年代被提出。2014 年�
 ### Attention 的结构
 
 我们可以简单的把 Attention 理解为一个黑盒子：
+
 输入
 - 一个 query
 - 一组 key-value 对
@@ -83,7 +84,7 @@ $$
 a(\mathbf q, \mathbf k) = \mathbf{q}^\top \mathbf{k}  /\sqrt{d}
 $$
 
-点积注意力没有可学习的参数，他的 intuition是两个向量越相似，他们的得分越高。但是这样的话，当 query 和 key 的维度很大的时候，点积的结果会非常大，所以一般会除以 $\sqrt{d}$ 来缩小结果的范围（缩放点积注意力）。在 Transformer 中使用的正是这种缩放点积注意力。
+点积注意力没有可学习的参数，他背后的 intuition 是两个向量越相似，他们的得分越高（一个向量数字大的地方另一个也大，小的地方另一个也小，我认为是 [排序不等式](https://baike.baidu.com/item/%E6%8E%92%E5%BA%8F%E4%B8%8D%E7%AD%89%E5%BC%8F/7775728) 的一种应用）。但是这样的话，当 query 和 key 的维度很大的时候，点积的结果会非常大，所以一般会除以 $\sqrt{d}$ 来缩小结果的范围（缩放点积注意力）。在 Transformer 中使用的正是这种缩放点积注意力。
 
 虽然这两种实现方式在理论复杂性上相似，但点积注意力在实践中更快、更节省空间，因为它可以使用高度优化的矩阵乘法代码来实现，同时点积注意力还可以通过批量矩阵乘法来并行计算，比如这里在 $n$ 个 query，$m$ 个 key-value 对的情况下，查询 $\mathbf Q\in\mathbb R^{n\times d}$，键 $\mathbf K\in\mathbb R^{m\times d}$，值 $\mathbf V\in\mathbb R^{m\times v}$，那么点积注意力的输出就是
 

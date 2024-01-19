@@ -108,6 +108,33 @@ class Solution:
         return f(0, 0, True)
 ```
 
+### [2719.统计整数数目](https://leetcode.cn/problems/count-of-integers/)
+
+这个题目的核心约束是两个范围，我们可以用类似前缀和的概念，解决第一个约束：用满足上界以内的数量减去满足下界以内的数量。  
+对于第二个约束，在 DP 的过程中，我们可以用一个变量记录当前的数位和，然后在 DP 的过程中，用这个变量来判断是否满足第二个约束。
+对于 isNum 的约束，因为全为 0 也是一种状态，所以可以不需要 mask 来记录已经使用过的数字。
+
+```py
+class Solution:
+    def count(self, num1: str, num2: str, min_sum: int, max_sum: int) -> int:
+        def calc(high: str) -> int:
+            @cache
+            def dfs(i: int, s: int, is_limit: bool) -> int:
+                if s > max_sum:  # 非法
+                    return 0
+                if i == len(high):
+                    return s >= min_sum
+                res = 0
+                up = int(high[i]) if is_limit else 9
+                for d in range(up + 1):  # 枚举当前数位填 d
+                    res += dfs(i + 1, s + d, is_limit and d == up)
+                return res
+            return dfs(0, 0, True)
+
+        is_num1_good = min_sum <= sum(map(int, num1)) <= max_sum
+        return (calc(num2) - calc(num1) + is_num1_good) % 1_000_000_007
+```
+
 ## 参考
 
 * https://oi-wiki.org/dp/number/

@@ -1,3 +1,10 @@
+---
+description: Spring 是一个开源框架，主要用于解决企业应用开发的复杂性。
+time: 2022-01-28 19:31:15+08:00
+tags: 
+heroImage: 
+---
+
 ## 什么是 Spring
 
 Spring 是一个开源框架，它由 Rod Johnson 创建。它是为了解决企业应用开发的复杂性而创建的。
@@ -10,8 +17,11 @@ Spring 是一个开源框架，它由 Rod Johnson 创建。它是为了解决企
 ## 为什么要用 Spring
 
 ## IoC 和 AOP
+
 IoC 和 AOP 是 Spring 的两大核心机制。
+
 ### IoC
+
 Spring 的核心就是提供了一个 **IoC 容器**，它可以管理所有轻量级的 JavaBean 组件，提供的底层服务包括组件的生命周期管理、配置和组装服务、AOP 支持，以及建立在 AOP 基础上的声明式事务服务等。
 
 > 什么是容器？容器是一种为某种特定组件的运行提供必要支持的一个软件环境。例如， Tomcat 就是一个 Servlet 容器，它可以为 Servlet 的运行提供运行环境。类似 Docker 这样的软件也是一个容器，它提供了必要的 Linux 环境以便运行一个特定的 Linux 进程。  
@@ -33,7 +43,9 @@ IoC(Inversion of Control)就是控制反转，不是什么技术，而是一种*
 举个例子，在很多情况下我们会想要用到单例模式，比如一些 Service 对象，其实我们只需要在全局有一个实例而不需要在到处 new 一个出来，利用 IoC 容器可以让我们很灵活的创建这样的对象。
 
 #### setup
+
 首先配置`pom.xml`引入spring-context。
+
 ```xml
 <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -53,9 +65,11 @@ IoC(Inversion of Control)就是控制反转，不是什么技术，而是一种*
     </dependency>
 </dependencies>
 ```
+
 > spring 中的IoC也是容器，那么他需要一个运行的上下文，spring-context就负责提供这个上下文。[更多关于](https://juejin.cn/post/6844903923703087111)
 
 之后在maven标准目录下`src/resources`中添加`application.xml`（），创建对象。
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -70,14 +84,17 @@ IoC(Inversion of Control)就是控制反转，不是什么技术，而是一种*
     <bean id="mailService" class="com.itranswarp.learnjava.service.MailService" />
 </beans>
 ```
+
 **注意：**
-- 每个`<bean ...>`都有一个`id`标识，相当于Bean的唯一ID；
+
+- 每个`<bean ...>`都有一个`id`标识，相当于 Bean 的唯一 ID；
 - `property`即是给成员变量赋值（set方法）；
 - 可以通过`constructor-arg`来调用构造函数；
 - `property`中`ref`可以引用容器创建的其他对象作为属性
-- Bean的顺序不重要，Spring根据依赖关系会自动正确初始化；
+- Bean 的顺序不重要，Spring 根据依赖关系会自动正确初始化；
 
-如果注入的不是Bean，而是boolean、int、String这样的数据类型，则通过value注入，例如，创建一个HikariDataSource：
+如果注入的不是 Bean，而是 boolean、int、String 这样的数据类型，则通过 value 注入，例如，创建一个 HikariDataSource：
+
 ```xml
 <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
     <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/test" />

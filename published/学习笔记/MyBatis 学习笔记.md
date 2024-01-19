@@ -1,8 +1,15 @@
-# MyBatis
+---
+description: "MyBatis 是一款优秀的持久层框架，可以理解为 MyBatis 就是对 JDBC 访问数据库的过程进行了封装，简化了 JDBC 代码，解决 JDBC 将结果集封装为 Java 对象的麻烦，使开发者只需要关注 SQL 本身，而不需要花费精力去处理例如注册驱动、创建 connection、创建 statement、手动设置参数、结果集检索等 JDBC 繁杂的过程代码。"
+time: 2021-12-06 12:04:15+08:00
+tags: 
+heroImage: 
+---
+
+
+## 是什么
 
 <img src="https://mybatis.org/images/mybatis-logo.png" style="float:right"/>
 
-## 是什么
 官方定义：MyBatis 是一款优秀的持久层框架，可以理解为 MyBatis 就是对 JDBC 访问数据库的过程进行了封装，简化了 JDBC 代码，解决 JDBC 将结果集封装为 Java 对象的麻烦，使开发者只需要关注 SQL 本身，而不需要花费精力去处理例如注册驱动、创建 connection、创建 statement、手动设置参数、结果集检索等 JDBC 繁杂的过程代码。
 
 MyBatis 本是 Apache 的一个开源项目 iBatis，2010 年这个项目由 Apache software foundation 迁移到了 Google Code，并且改名为 MyBatis。2013 年 11 月迁移到 Github。（很多包名仍叫 iBatis）
