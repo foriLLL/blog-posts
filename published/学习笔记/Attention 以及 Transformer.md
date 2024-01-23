@@ -209,20 +209,23 @@ $$
 
 #### Decoder
 
-Transformer 的 Decoder 和整个 Encoder 结构基本一致，只是多一个额外的 Attention 机制 `encoder-decoder attention` 子层插在中间，在这个子层中，query 是 decoder 上一层的输出，key-values 来自 Encoder 最后一层的输出，这个 attention 最后的输出作为上下文变量，这其实完全类比 seq2seq 模型中典型的**编码器-解码器注意机制**，可以让 Decoder 中每一步都关注到输入序列的所有位置。
+Transformer 的 Decoder 和整个 Encoder 结构基本一致，只是多一个额外的 Attention 机制 `encoder-decoder attention` 子层插在中间，在这个子层中，query 是 decoder 上一层的输出（由于输出和 query 的数量一致，所以每个 Decoder block 的输出和 Decoder 的输入一致），key-values 来自 Encoder 最后一层的输出，这个 attention 最后的输出作为上下文变量，这其实完全类比 seq2seq 模型中典型的**编码器-解码器注意机制**，可以让 Decoder 中每一步都关注到输入序列的所有位置。
 
 此外，Decoder 中的 self-attention 也有一个额外的 mask，用于防止当前位置的输出依赖于后续位置的输出，这样可以保证模型在训练时只能看到当前位置之前的输出。这里其实也很好理解，因为在实际应用中，我们是不可能知道未来的信息的，所以在训练时也不应该让模型看到未来的信息。
 
 ### 数据流
 
-以一个普通的文本序列任务为例，模型的输入是序列经过嵌入后转化为 $d_{model}$ 维度的向量序列，每个元素经过线性变化加入位置编码后仍然保持 $d_{model}$ 维度送入第一个 Encoder block，首先经过第一个子层，在这个子层经过多头注意力以及残差连接和层规范化后，输出保持 $d_{model}$ 维不变，接着在第二个子层经过两个线性变换以及残差连接和层规范化，仍保持 $d_{model}$ 维不变，这时的输出作为整个 block 的输出，传入下一个 block 作为输入，以此类推，直到最后一个 block，最后一个 block 的输出作为整个 Encoder 的输出，送入 Decoder。
+以一个普通的机器翻译序列任务为例，模型的输入是序列经过嵌入后转化为 $d_{model}$ 维度的向量序列 $(source\_seq\_len, batch\_size, d_{model})$，这个序列中每个元素经过线性变化加入位置编码后仍然保持 $d_{model}$ 维度送入第一个 Encoder block，首先经过第一个多头注意力子层，向量序列既作为 Attention 机制的 query 又作为 key 和 value，三者都被投影到 $d_q = d_k = d_v = d_{model}/h = 64$ 维度，然后进行 $h$ 次并行的 Self Attention 操作，最后将 $h$ 个输出拼接起来得到 $h\times d_v = d_{model}$ 维度的输出，每个输入的 query 都对应一个 $d_{model}$ 形状的输出，再经过一个 $d_{model} \times d_{model}$ 的线性变换，还是保持 $d_{model}$ 维度的输出，此时输出形状仍为 $(source\_seq\_len, batch\_size, d_{model})$，接着经过第二个子层，输入和输出的维度都是 $d_{model}$，这时的输出作为整个 block 的输出，形状依旧是 $(source\_seq\_len, batch\_size, d_{model})$，传入下一个 block 作为输入，以此类推，直到最后一个 block，最后一个 block 的输出作为整个 Encoder 的输出，送入 Decoder。
+
+***
 
 在 Decoder 中也有类似的过程，首先第一个 block 的第一个输入是一个特殊的 `<bos>` 标记，输入的序列是
 ```
 <bos> mask mask mask mask mask mask
 ```
-这个序列经过嵌入后转化为 $d_{model}$ 维度的向量序列，每个元素经过线性变化加入位置编码后仍然保持 $d_{model}$ 维度送入第一个 Decoder block，首先经过第一个子层，在这个子层经过多头注意力以及残差连接和层规范化后，输出保持 $d_{model}$ 维不变。  
-接着经过 `encoder-decoder attention` 层，这个层的 query 是上一层的输出，key-values 来自 Encoder 最后一层的输出（它们的维度都是 $d_{model}$），这个 attention 最后的输出作为上下文变量，送入最后一个子层，这个子层和 Encoder 中的第二个子层是一样的，输入和输出的维度都是 $d_{model}$，这时的输出作为整个 block 的输出，传入下一个 block 作为输入，以此类推，直到最后一个 block，最后一个 block 的输出作为整个 Decoder 的输出，这个输入的维度当然也是 $d_{model}$，经过一个线性变换后，送入 softmax 函数，得到一个概率分布，这个概率分布就是针对于这一个时间步的输出的 token id，映射回词表，就是这个时间步的输出。
+这个序列经过嵌入后转化为 $d_{model}$ 维度的向量序列（$(target\_seq\_len, batch\_size, d_{model})$，注意这里 $target\_seq\_len$ 和 Encoder 中的 $source\_seq\_len$ 可以不一致），每个元素经过线性变化加入位置编码后仍然保持 $d_{model}$ 维度送入第一个 Decoder block，首先经过第一个子层，在这个子层经过多头注意力以及残差连接和层规范化后，输出保持 $d_{model}$ 维不变。  
+接着经过 `encoder-decoder attention` 层，这个层的 query 是上一层的输出，key-values 来自 Encoder 最后一层的输出（它们的维度都是 $d_{model}$，所以这里输出的维度还是 $(target\_seq\_len, batch\_size, d_{model})$，和 Decoder 的输入形状一致，这个 attention 最后的输出作为上下文变量，送入最后一个子层，这个子层和 Encoder 中的第二个子层是一样的，输入和输出的维度都是 $d_{model}$，这时的输出作为整个 block 的输出，传入下一个 block 作为输入，以此类推，直到最后一个 block，最后一个 block 的输出作为整个 Decoder 的输出，这个输出向量的维度当然也是 $(\text{target\_seq\_len}, \text{batch\_size}, d_{model})$，
+经过一个线性变换后，送入 softmax 函数，得到一个 $(\text{target\_seq\_len}, \text{batch\_size}, \text{vocab\_size})$ 概率分布，但在一个指定的 decoder step，我们只使用这个概率获取当前时间步的输出，所以对于时间步 $i$，我们取这个概率分布的切片 $[i, :, :]$，然后再通过 argmax 函数取出最大值的索引，这个索引就是当前时间步的输出，然后将这个输出作为下一个时间步的输入，以此类推，直到遇到 `<eos>` 标记，这时 Decoder 的输出就是整个模型的输出。
 
 假设第一个时间步的输出是 `Consider`，那么下一个时间步的输入序列就是
 ```
@@ -234,7 +237,7 @@ Transformer 的 Decoder 和整个 Encoder 结构基本一致，只是多一个�
 <bos> Consider the following text as an example of how the Transformer works. <eos>
 ```
 
-也就是说在整个 infer 的过程中，对于一个输入，Encoder （也就是图片的左半部分）只会计算一次，而 Decoder （图片的右半部分）会计算多次，直到遇到 `<eos>` 标记，这时 Decoder 的输出就是整个模型的输出。
+也就是说在整个 infer 的过程中，对于一个输入，Encoder （也就是图片的左半部分）只会计算一次，而 Decoder （图片的右半部分）会计算多次（autoregressive manner），直到遇到 `<eos>` 标记，这时 Decoder 的输出就是整个模型的输出。
 
 > 这里的理解是基于我个人的理解，可能有些地方理解的不对，欢迎指正。
 
