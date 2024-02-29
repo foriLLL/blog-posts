@@ -50,7 +50,7 @@ time: 2022-11-22 12:54:17+08:00
 
 ## 通过路径来 reset
 
-如果给 `reset` 命令制定了一个文件路径或文件集，如 `git reset file.txt` （其实是 `git reset --mixed HEAD file.txt` 的简写形式），`reset` 将会跳过 Step 1，并且将它的作用范围限定为指定的文件或文件集合。因为 HEAD 只是一个指针，你无法让它同时指向两个提交中各自的一部分。 不过 Index 和工作目录可以部分更新，所以重置会继续进行第 2、3 步。所以 **本质上只是将 file.txt 从 HEAD 复制到索引中**。相当于 **取消暂存文件** 的实际效果。
+如果给 `reset` 命令指定了一个文件路径或文件集，如 `git reset file.txt` （其实是 `git reset --mixed HEAD file.txt` 的简写形式），`reset` 将会跳过 Step 1，并且将它的作用范围限定为指定的文件或文件集合。因为 HEAD 只是一个指针，你无法让它同时指向两个提交中各自的一部分。 不过 Index 和工作目录可以部分更新，所以重置会继续进行第 2 步。所以 **本质上只是将 file.txt 从 HEAD 复制到索引中**。相当于 **取消暂存文件** 的实际效果。
 
 ![](https://git-scm.com/book/en/v2/images/reset-path1.png)
 
