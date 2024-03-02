@@ -1,9 +1,14 @@
 ---
 description: "由于 tsc 并不会在 emitted code 中解决 import 的路径别名（这个问题已经在社区有很多讨论了，官方的意思是这就是期望的输出），所以我们需要额外加入一些配置来完成别名的配置，这里记录在 ts 项目中配置 \"@/*\" 别名报错的问题的三种解决方案。"
-time: 2023-01-10T15:44:28+08:00
+time: 2023-12-2T15:44:28+08:00
 heroImage: "https://img.foril.fun/20230622201156.png"
 tags: []
 ---
+
+文章写于 2023-01-10，最后校正于 2023-12-2。
+
+***
+
 由于 tsc 并不会在 emitted code 中解决 import 的路径别名（这个问题已经在社区有很多 [讨论](https://github.com/microsoft/TypeScript/issues/10866) 了，官方的意思是这就是期望的输出），所以我们需要额外加入一些配置来完成别名的配置，这里记录在 ts 项目中配置 "@/*" 别名报错的问题的三种解决方案。
 
 这个问题是我在开发 Koa 博客后端时遇到的，采用 TypeScript 开发。
@@ -102,6 +107,7 @@ Require stack:
 
 这个问题可以使用 `tsconfig-paths` 来解决，这个包周下载量大概有 2400w，估计是比较常用的一个包了。
 具体配置如下：
+
 ```json
 // nodemon.json
 {
@@ -114,22 +120,29 @@ Require stack:
 }
 ```
 
+> `node -r` 命令是用于在 Node.js 程序中加载一个或多个指定的模块。这个 `-r` 选项允许你在程序开始运行之前注册一个或多个模块，这些模块将被预先加载到内存中，以便在程序执行期间可以使用它们。
+
 接着运行，问题完美解决。
 
 > 附上 tsconfig-paths 的官方介绍翻译：  
 > 
-> 使用此包加载在 tsconfig.json 或 jsconfig.json 的 paths 部分指定的位置的模块。支持在运行时和通过 API 加载。  
+> 使用此包加载在 tsconfig.json 或 jsconfig.json 的 paths 部分指定的位置的模块。**支持在运行时和通过 API 加载**。  
 默认情况下，TypeScript 模拟 Node.js 运行时的模块解析策略。但它还允许使用路径映射，这允许指定任意模块路径（不以 "/" 或 "." 开头的路径），并将它们映射到文件系统中的物理路径。**TypeScript 编译器可以从 tsconfig 解析这些路径，因此它将编译正常。但是，如果您尝试使用 node（或 ts-node）执行编译后的文件，它将仅在直到文件系统根目录的 node_modules 文件夹中查找，因此不会找到 tsconfig 中的路径所指定的模块。**  
 如果您需要此包的 tsconfig-paths/register 模块，它将从 tsconfig.json 或 jsconfig.json 中读取路径并将 node 的模块加载调用转换为 node 可加载的物理文件路径。
 
 ***
+
 ## 补充
+
 之后发现，使用 tsconfig-paths 之后，ts-node 确实可以在运行时找到别名路径，但是如果不使用 babel，而是直接使用 tsc 编译时，却找不到别名路径，可以生成 js 文件，但是运行时会报错。
+
 ```js
 // 这里是生成的 .js 文件，可以看到别名路径并没有被替换
 const file_1 = require("@/utils/file");
 const config_1 = require("@/config");
 ```
+
+> 上面官方文档也有提到：支持在运行时和通过 API 加载。
 
 那么如果我不想使用babel，而是直接使用 tsc 编译，应该怎么办呢？
 
@@ -148,7 +161,11 @@ tsc && ts-alias
 ```
 如果只单独运行 tsc 是不会替换别名路径的，需要再运行一次 `ts-alias`。
 
-那么现在我们的工作流程就变成了使用tsc编译时使用 `tsc && tsc-alias`，运行时使用 `ts-node -r tsconfig-paths/register ./src/application.ts`。需要用到两个第三方包，**生成的 js 文件可以直接使用 Node 运行的**。
+那么现在我们的工作流程就变成了：
+1. 使用 tsc 编译时使用 `tsc && tsc-alias`；
+2. 直接运行 ts 时使用 `ts-node -r tsconfig-paths/register ./src/application.ts`。
+
+综上，我们需要用到两个第三方包，做到了在 `tsconfig.json` 下配置路径映射的情况下，可以直接运行 ts 文件，也可以编译生成 js 文件且 **生成的 js 文件可以直接使用 Node 运行的**。
 
 ### 方法二
 另外一种解决方案是在 Node 中使用 `tsconfig-paths` 提供的注册模块，利用 
@@ -172,11 +189,13 @@ TS_NODE_BASEURL=./build_tsc node -r tsconfig-paths/register main.js
     }
 }
 ```
+
 <img alt="20230510121544" src="https://img.foril.fun/20230510121544.png" width=300px style="display: block; margin:10px auto"/>
 
 ***这里需要特别注意这种方法生成的 js 文件中是包含别名信息的，不能直接使用 node 运行，必须注册 `tsconfig-paths` 模块，这和上面使用 `tsc-alias` 直接将 js 中的别名替换的方法不同，`tsc-alias` 生成的 js 文件可以直接使用 node 运行。***
 
-在这里附上两种方法的区别：
+两种方法的区别：
+
 ```js
 // 使用 tsc-alias 生成的 js 文件
 const fs_1 = __importDefault(require("fs"));
@@ -195,10 +214,9 @@ const path_1 = __importDefault(require("path"));
 const gray_matter_1 = __importDefault(require("gray-matter"));
 ```
 
-> node -r命令是用于在Node.js程序中加载一个或多个指定的模块。这个-r选项允许你在程序开始运行之前注册一个或多个模块，这些模块将被预先加载到内存中，以便在程序执行期间可以使用它们。
 
 ### 方法三
-由于编译时 tsconfig-paths 失效是因为 [找不到 ourDir](https://github.com/dividab/tsconfig-paths/issues/75)，如果不指定 ourDir 就可以正常使用 `node -r tsconfig-paths/register ./src/application.js`，但是这样就不能指定输出文件夹了。
+由于编译时 tsconfig-paths 失效是因为 [找不到 outDir](https://github.com/dividab/tsconfig-paths/issues/75)，如果不指定 outDir 就可以正常使用 `node -r tsconfig-paths/register ./src/application.js`，但是这样就不能指定输出文件夹了。
 
 所以一个 workaround 就是针对 node 可以单独写一个 register，然后在运行时使用 `node -r ./register.js ./src/application.js`，这样就可以了。当然 register.js 的位置你可以自己指定。
 
