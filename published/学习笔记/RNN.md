@@ -39,7 +39,7 @@ $$
 
 固定长度的 $n$ 元模型在预测时间步 $t$ 的数据时，只能利用过去 $n-1$ 个时间步的数据，如果想要考虑更长的时间跨度，就需要增加 $n$，但是这样会导致参数数量的增加，比如一个 $n$ 元语法模型，预测时间步 $t$ 的单词时，需要考虑之前 $n-1$ 个单词，那么参数数量就是 $O(|\mathcal{V}|^n)$，其中 $\mathcal{V}$ 是词典的大小。参数数量是随着 $n$ 的增加而指数增加的，这样就会导致模型的训练变得非常困难。  
 
-因此，我们需要引入一个隐状态变量 $h_t$ 来保存过去的信息，用于存储过去所有时间步的信息，然后用这个隐状态变量来预测当前时间步的数据，即
+因此，我们需要引入一个隐状态变量 $h_t$ 来保存过去的信息，用于存储过去所有时间步的信息，这个隐状态变量可以用来预测下一时间步的数据，从当前时间数据和之前时间步的隐状态得到，即
 
 $$
 h_t = f(x_{t}, h_{t-1}).
@@ -50,7 +50,7 @@ $$
 <img alt="RNN" src="https://img.foril.fun/RNN.svg" width=600px style="display: block; margin:10px auto"/>
 
 上面图片展示的就是一个最基础的 RNN 模型，每个时间步的输入 $X_t$ 和隐状态 $H_t$ 都是一个向量，考虑 batch 的情况，$X_t$ 是一个 $n \times d$ 的矩阵，$H_t$ 是一个 $n \times h$ 的矩阵，其中 $n$ 是 batch 的大小，$d$ 是输入的维度，$h$ 是隐状态的维度。  
-模型的参数包括 $\mathbf{W}_{xh} \in \mathbb{R}^{d \times h}, \mathbf{W}_{hh} \in \mathbb{R}^{h \times h}$，$\mathbf{W}_{xh} \in \mathbb{R}^{d \times h}, \mathbf{W}_{hh} \in \mathbb{R}^{h \times h}$ 和 $\mathbf{b}_q \in \mathbb{R}^{1 \times q}$，其中 $W_{xh}$ 是输入到隐状态的权重矩阵，$W_{hh}$ 是隐状态到隐状态的权重矩阵，$b_q$ 是隐状态的偏置。
+模型的参数包括 $\mathbf{W}_{xh} \in \mathbb{R}^{d \times h}, \mathbf{W}_{hh} \in \mathbb{R}^{h \times h}$ 和 $\mathbf{b}_q \in \mathbb{R}^{1 \times h}$，其中 $W_{xh}$ 是输入到隐状态的权重矩阵，$W_{hh}$ 是隐状态到隐状态的权重矩阵，$b_q$ 是隐状态的偏置。
 
 ### RNN 的计算
 
