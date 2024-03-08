@@ -17,7 +17,7 @@ squash 功能可以将多个 commit 合并成一个，这样可以使得 commit 
 
 接下来我想把 `add 45` 和 `add 67` 合并成一个 commit，于是我就在 branch a 上执行了 `git rebase -i HEAD~2`，然后就进入了一个交互式的编辑界面（vim）。
 
-```
+```sh
 pick 9f5ca8a add 45
 pick dd6aeb5 add 67
 
