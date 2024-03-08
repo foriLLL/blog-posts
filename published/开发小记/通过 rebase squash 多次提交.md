@@ -48,15 +48,16 @@ pick dd6aeb5 add 67
 
 这里有两个 commit，我想要合并，所以我将第二个 commit 的 `pick` 改成了 `squash`，然后保存退出。
 
-```
+```sh
 pick 9f5ca8a add 45
 squash dd6aeb5 add 67
 ```
+
 > 如果你将一行或连续多行的 `pick` 改成了 `squash`，那么这些 commit 就会被合并成一个 commit，和第一个 `squash` 上面的 commit 合并，然后会进入一个编辑界面，让你编辑 commit message。
 
 接着编辑新的 commit message：
 
-```
+```sh
 add 4567        # 在这里编辑 commit message
 
 # This is a combination of 2 commits.
