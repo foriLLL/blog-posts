@@ -272,6 +272,12 @@ export default {
 
 上面这个例子很能说明问题，如果使用 `div`，`p.name` 在 App 中被 `track`，调用 `changeFirst` 时，会触发 App 的 render，打印出 `App updated`，而触发 App 的渲染会导致一个复杂的 VDOM 构造、VDOM 比较以及子组件的递归比较等，而如果使用 `Item` 组件，只传入 `p`，那么在 App 中，只有 `people` 里的对象被 `track`，而不是 `p.name` 这个属性，那么我们更新 `p.name` 就不会触发 App 的渲染，而在第一个 `Item` 组件内部调用了 `item.name`，那么 `p.name` （这里的 `p` 只是下标为 0 的那一个对象）的 set 会触发第一个 `Item` 的渲染。相比之下，这样做只触发了一个 `Item` 组件的更新，渲染的开销极小。
 
+从 Devtools 调试中我们也可以看到使用 `div` 时 `renderEffect` 的实例是 `App`，而使用 `ListItem` 时 `renderEffect` 的实例是 `ListItem`。
+
+<img alt="渲染范围 App" src="https://img.foril.fun/渲染范围 App.PNG" width=600px style="display: block; margin:10px auto"/>
+
+<img alt="渲染范围 ListItem" src="https://img.foril.fun/渲染范围 ListItem.PNG" width=600px style="display: block; margin:10px auto"/>
+
 回到最开始遇到的渲染开销的问题，想要在每个 item 上加一些属性，如果是使用原来的对象，只会触发 `ListItem` 的重渲染，而构建新对象，会触发上层组件的重渲染，Vue 的虚拟 DOM 系统将对整个组件树进行重新渲染。在这个过程中，Vue 需要比较大量新旧虚拟 DOM 树，找出差异，并决定如何最有效地更新实际的 DOM。
 
 因此使用展开语法构建新对象的写法会造成更多的内存分配（每个对象都创建了一个新实例）和更复杂的虚拟 DOM 操作。这种方法在处理大型数组或对象时应谨慎使用，因为这样可能会显著影响应用程序的性能。
