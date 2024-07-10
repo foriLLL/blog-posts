@@ -82,7 +82,7 @@ export default function App() {
 > 3. 虚拟 DOM 比较：React 比较新的虚拟 DOM 树和旧的虚拟 DOM 树，找出差异（使用 diff 算法）。
 > 4. DOM 更新：React 仅更新实际 DOM 中有变化的部分（根据虚拟 DOM 比较结果）。 
  
-> 虚拟 DOM 树其实就是一个纯 JavaScript 的对象。
+*补充： 虚拟 DOM 树其实就是一个纯 JavaScript 的对象。
 
 ```js
 const vnode = {
@@ -270,6 +270,19 @@ export default {
 </script>
 ```
 
+```html
+<script>
+export default {
+  name: "ListItem",
+  props: ["item"],
+};
+</script>
+
+<template>
+  <div>{{ item.name }} {{ item.id }}</div>
+</template>
+```
+
 上面这个例子很能说明问题，如果使用 `div`，`p.name` 在 App 中被 `track`，调用 `changeFirst` 时，会触发 App 的 render，打印出 `App updated`，而触发 App 的渲染会导致一个复杂的 VDOM 构造、VDOM 比较以及子组件的递归比较等，而如果使用 `Item` 组件，只传入 `p`，那么在 App 中，只有 `people` 里的对象被 `track`，而不是 `p.name` 这个属性，那么我们更新 `p.name` 就不会触发 App 的渲染，而在第一个 `Item` 组件内部调用了 `item.name`，那么 `p.name` （这里的 `p` 只是下标为 0 的那一个对象）的 set 会触发第一个 `Item` 的渲染。相比之下，这样做只触发了一个 `Item` 组件的更新，渲染的开销极小。
 
 从 Devtools 调试中我们也可以看到使用 `div` 时 `renderEffect` 的实例是 `App`，而使用 `ListItem` 时 `renderEffect` 的实例是 `ListItem`。
@@ -288,11 +301,15 @@ export default {
 
 ## *有关另一个在项目中的 bug
 
-有了上面的了解，接下来我们再看一个实际代码中的例子，这段代码的目的是一个项目有缩略图时渲染缩略图，没有的时候先渲染一个 Icon：
+有了上面的了解，接下来我们再看一个实际代码中的例子，这段代码的目的是一个条目有缩略图时渲染缩略图，没有的时候先渲染一个 icon：
+
+写法一
 
 <img alt="20240616001917" src="https://img.foril.fun/20240616001917.png" width=600px style="display: block; margin:10px auto"/>
 
-<img alt="20240616001926" src="https://img.foril.fun/20240616001926.png" width=600px style="display: block; margin:10px auto"/>
+写法二
+
+<img alt="noGetOwnProperty" src="https://img.foril.fun/noGetOwnProperty.png" width=600px style="display: block; margin:10px auto"/>
 
 但当使用 `item.hasOwnProperty('thumbnail')` 时，Vue 的响应式系统注册的 get 的 `target` 和 `key` 是 `item.hasOwnProperty`，所以只有当 `item.hasOwnProperty` 被 set 时才会触发组件的重渲染。
 另一方面，使用 `item.thumbnail === undefined` 时，实际上是在访问 `item` 对象的 `thumbnail` 属性，这会创建一个 getter，使得 thumbnail 成为一个响应式依赖。因此，当 thumbnail 属性的值更新时，Vue 会检测到这个变化，并触发组件的重渲染。
