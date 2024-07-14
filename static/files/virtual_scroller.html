@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual List</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        #app {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+        .buttonDiv {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 48px;
+        }
+        button {
+            height: 32px;
+            width: 100px;
+        }
+        .infinite-list-container {
+            flex: 1;
+            overflow-y: scroll;
+            box-sizing: border-box;
+            position: relative;
+            -webkit-overflow-scrolling: touch;
+        }
+        .infinite-list-phantom {
+            text-align: center;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50%;
+            z-index: 1;
+        }
+        .infinite-list {
+            right: 0;
+            top: 0;
+            width: 50%;
+            position: absolute;
+            text-align: center;
+        }
+        .infinite-list-item {
+            box-sizing: border-box;
+            border: 0.1px solid #999;
+            background-color: white;
+            height: 48px;
+            line-height: 48px;
+        }
+        .phantom-item {
+            background-color: #1AB7EA;
+        }
+        .phantom-item:nth-child(3) {
+            margin: 0 -40px;
+            background-color: greenyellow;
+        }
+        .highlight {
+            color: red;
+            font-weight: bolder;
+            font-size: larger;
+        }
+        .animation {
+            transition: all 1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="buttonDiv">
+            <button onclick="changeAnimation()">打开动画</button>
+        </div>
+        <div class="infinite-list-container" id="infinite-list-container">
+            <div class="infinite-list-phantom" id="infinite-list-phantom">
+                <!-- Visible items will be rendered here -->
+            </div>
+            <div class="infinite-list" id="infinite-list">
+                <!-- Placeholder for total list height -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const num = 40;
+        const itemSize = 48;
+        let animationOn = false;
+
+        const list = document.getElementById('infinite-list');
+        for (let i = 0; i < num; i++) {
+            const div = document.createElement('div');
+            div.className = 'infinite-list-item';
+            div.textContent = i;
+            list.appendChild(div);
+        }
+
+        const listData = Array.from({ length: num }, (_, i) => ({ id: i, value: i }));
+        const container = document.getElementById('infinite-list-container');
+        const phantom = document.getElementById('infinite-list-phantom');
+
+        let screenHeight = container.clientHeight;
+        let visibleCount = Math.ceil(screenHeight / itemSize) + 1;
+        let start = 0;
+        let end = Math.min(start + visibleCount, listData.length);
+        let startOffset = 0;
+
+        const pool = [];
+        
+        for (let i = 0; i < end; i++) {
+            const div = document.createElement('div');
+            div.className = 'infinite-list-item phantom-item';
+            div.textContent = listData[i].value;
+            pool.push(div);
+            phantom.appendChild(div);
+        }
+
+        function onScroll() {
+            const scrollTop = container.scrollTop;
+            let offset = scrollTop - (scrollTop % itemSize);
+            offset = Math.min(offset, itemSize * (listData.length - visibleCount));
+            console.log('offset', offset)
+            phantom.style.transform = `translateY(${offset}px)`;
+
+            const newStart = Math.floor(offset / itemSize);
+            if (newStart === start) return;
+            start = newStart;
+            end = Math.min(start + visibleCount, listData.length);
+            modifyPool();
+        }
+
+        function modifyPool() {
+            for (let i = 0; i < pool.length; i++) {
+                const item = pool[i];
+                const index = start + i;
+                if (index < listData.length) {
+                    item.textContent = listData[index].value;
+                    if (animationOn) highlightItem(item); // 调用高亮函数
+                } else {
+                    item.textContent = '';
+                }
+            }
+        }
+
+        function highlightItem(item) {
+            item.classList.add('highlight');
+            setTimeout(() => {
+                item.classList.remove('highlight');
+            }, 500);
+        }
+
+        container.addEventListener('scroll', onScroll);
+
+        function changeAnimation() {
+            const button = document.querySelector('button');
+            if (button.textContent === '打开动画') {
+                animationOn = true;
+                button.textContent = '关闭动画';
+                pool.forEach(item => {
+                    item.classList.add('animation');
+                });
+                phantom.classList.add('animation');
+            } else {
+                animationOn = false;
+                button.textContent = '打开动画';
+                pool.forEach(item => {
+                    item.classList.remove('animation');
+                });
+                phantom.classList.remove('animation');
+            }
+        }
+    </script>
+</body>
+</html>
