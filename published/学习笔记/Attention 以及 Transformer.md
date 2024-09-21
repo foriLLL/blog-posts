@@ -223,7 +223,7 @@ Transformer 的 Decoder 和整个 Encoder 结构基本一致，只是多一个�
 ```
 <bos> mask mask mask mask mask mask
 ```
-这个序列经过嵌入后转化为 $d_{model}$ 维度的向量序列（$(target\_seq\_len, batch\_size, d_{model})$，注意这里 $target\_seq\_len$ 和 Encoder 中的 $source\_seq\_len$ 可以不一致），每个元素经过线性变化加入位置编码后仍然保持 $d_{model}$ 维度送入第一个 Decoder block，首先经过第一个子层，在这个子层经过多头注意力以及残差连接和层规范化后，输出保持 $d_{model}$ 维不变。  
+这个序列经过嵌入后转化为 $d_{model}$ 维度的向量序列（即$(target\_seq\_len, batch\_size, d_{model})$，注意这里 $target\_seq\_len$ 和 Encoder 中的 $source\_seq\_len$ 可以不一致），每个元素经过线性变化加入位置编码后仍然保持 $d_{model}$ 维度送入第一个 Decoder block，首先经过第一个子层，在这个子层经过多头注意力以及残差连接和层规范化后，输出保持 $d_{model}$ 维不变。  
 接着经过 `encoder-decoder attention` 层，这个层的 query 是上一层的输出，key-values 来自 Encoder 最后一层的输出（它们的维度都是 $d_{model}$，所以这里输出的维度还是 $(target\_seq\_len, batch\_size, d_{model})$，和 Decoder 的输入形状一致，这个 attention 最后的输出作为上下文变量，送入最后一个子层，这个子层和 Encoder 中的第二个子层是一样的，输入和输出的维度都是 $d_{model}$，这时的输出作为整个 block 的输出，传入下一个 block 作为输入，以此类推，直到最后一个 block，最后一个 block 的输出作为整个 Decoder 的输出，这个输出向量的维度当然也是 $(\text{target\_seq\_len}, \text{batch\_size}, d_{model})$，
 经过一个线性变换后，送入 softmax 函数，得到一个 $(\text{target\_seq\_len}, \text{batch\_size}, \text{vocab\_size})$ 概率分布，但在一个指定的 decoder step，我们只使用这个概率获取当前时间步的输出，所以对于时间步 $i$，我们取这个概率分布的切片 $[i, :, :]$，然后再通过 argmax 函数取出最大值的索引，这个索引就是当前时间步的输出，然后将这个输出作为下一个时间步的输入，以此类推，直到遇到 `<eos>` 标记，这时 Decoder 的输出就是整个模型的输出。
 
