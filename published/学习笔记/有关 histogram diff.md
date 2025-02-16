@@ -7,7 +7,7 @@ tags: []
 
 从 Git 2.33 版本开始，默认的 git-merge 策略已经变成了 `merge-ort`，而不是 `merge-recursive` 了，这个策略所采用的默认 diff 算法是 `histogram`（详见 [文档](https://git-scm.com/docs/merge-strategies/#Documentation/merge-strategies.txt-diff-algorithmpatienceminimalhistogrammyers)）。在实验时，我发现你有些合并冲突块实际上可以使用一些更细粒度的编辑脚本生成算法解决，也就是说其实在 single head 合并中双边的冲突其实针对的是不同的代码行，可以使用最朴素的采纳双边编辑的思想来解决，但是却被 Git 算作是冲突。所以想了解一下 histogram diff 算法的具体内容，以下是我的一些总结。
 
-<img alt="20230925145030" src="https://img.foril.fun/20230925145030.png" width=600px style="display: block; margin:10px auto"/>
+<img alt="20230925145030" src="https://img.foril.space/20230925145030.png" width=600px style="display: block; margin:10px auto"/>
 
 ## 什么是 Histogram Diff 算法
 
@@ -129,7 +129,7 @@ xdl_do_diff(orig, mf2, xpp, &xe2)
 
 例如下面这个冲突得到的两个 diff 结果就是这样：
 
-<img alt="20230925145030" src="https://img.foril.fun/20230925145030.png" width=600px style="display: inline-block; margin:10px auto"/>
+<img alt="20230925145030" src="https://img.foril.space/20230925145030.png" width=600px style="display: inline-block; margin:10px auto"/>
 
 ```
 xe1 记录 A 与 base 的 diff 结果   xdf1 对应的都是 base 的结果
@@ -181,13 +181,13 @@ if (xscr1->i1 + xscr1->chg1 < xscr2->i1)
 
 就是说起始位置加上长度要小于结束位置才不算冲突，还是刚才那个例子，对应的编辑脚本是这样，左右两侧相等，于是认为是冲突块。
 
-<img alt="编辑脚本示意" src="https://img.foril.fun/编辑脚本示意.png" width=600px style="display: block; margin:10px auto"/>
+<img alt="编辑脚本示意" src="https://img.foril.space/编辑脚本示意.png" width=600px style="display: block; margin:10px auto"/>
 
 也就是说 Git 倾向于把相邻行的编辑合并为一个大的冲突块，而不是直接应用相邻的编辑，个人认为这个原因是 Git 为了减少假阴性冲突的生成（自动消解但结果不正确的合并行为），会把同一个位置的编辑作为冲突块警示开发者，比如相邻块的编辑或是不确定顺序的在同一个位置的插入：
 
-<img alt="相邻行编辑插入" src="https://img.foril.fun/相邻行编辑插入.png" width=1000px style="display: block; margin:10px auto"/>
+<img alt="相邻行编辑插入" src="https://img.foril.space/相邻行编辑插入.png" width=1000px style="display: block; margin:10px auto"/>
 
-<img alt="同一位置的插入" src="https://img.foril.fun/同一位置的插入.png" width=600px style="display: block; margin:10px auto"/>
+<img alt="同一位置的插入" src="https://img.foril.space/同一位置的插入.png" width=600px style="display: block; margin:10px auto"/>
 
 ## 总结
 

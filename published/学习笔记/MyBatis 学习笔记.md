@@ -18,7 +18,7 @@ MyBatis 本是 Apache 的一个开源项目 iBatis，2010 年这个项目由 Apa
 
 ### 架构图
 
-<img alt="MyBatis架构图" src="https://img.foril.fun/20220710195059.png" width=600px style="margin:10px auto"/>
+<img alt="MyBatis架构图" src="https://img.foril.space/20220710195059.png" width=600px style="margin:10px auto"/>
 
 如上图所示是MyBatis架构图：  
 1. **mybatis-config.xml** 是Mybatis的核心配置文件，通过其中的配置可以生成SqlSessionFactory,也就是SqlSession工厂；
@@ -309,7 +309,7 @@ MyBatis Generator，简称 MBG，是⼀个专⻔为 MyBatis 框架开发者定�
 
 实际使用中我们可以利用 IDEA 插件，通过 GUI 直接从数据表生成实体类以及对应mapper，只需要在 `config.xml` 下完成 mapper 配置即可使用自动生成的 SQL 方法。
 
-<img alt="插件生成mapper" src="https://img.foril.fun/20220711121421.png" width=600px style="margin:10px auto"/>
+<img alt="插件生成mapper" src="https://img.foril.space/20220711121421.png" width=600px style="margin:10px auto"/>
 
 ## 延迟加载
 延迟加载也叫懒加载、惰性加载，使⽤延迟加载可以提⾼程序的运⾏效率，针对于数据持久层的操作，在某些特定的情况下去访问特定的数据库，在其他情况下可以不访问某些表，从⼀定程度上减少了 Java 应⽤与数据库的交互次数。  

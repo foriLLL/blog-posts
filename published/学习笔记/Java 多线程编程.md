@@ -85,7 +85,7 @@ Thread类有一些重要的方法和静态方法，可以参考这个链接：[T
 
 4. 调用 FutureTask 对象的 get() 方法来获得子线程执行结束后的返回值。
 
-<img src="https://img.foril.fun/FutureTask%E7%BB%A7%E6%89%BF%E7%BB%93%E6%9E%84.jpg"/>
+<img src="https://img.foril.space/FutureTask%E7%BB%A7%E6%89%BF%E7%BB%93%E6%9E%84.jpg"/>
 
 上图展示了FutureTask的继承实现结构，实质上是对Runnable的一个封装。
 

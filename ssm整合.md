@@ -1,7 +1,7 @@
 # SSM整合
 
 目录结构
-<img alt="SSM整合目录结构" src="https://img.foril.fun/20220712095908.png" width=400px style="margin:10px auto"/>
+<img alt="SSM整合目录结构" src="https://img.foril.space/20220712095908.png" width=400px style="margin:10px auto"/>
 
 web.xml配置web应用信息；spring.xml中整合mybatis；在config.xml中配置一些mybatis辅助信息；springmvc.xml下配置mvc信息；利用插件从数据表生成实体类（entity下），MyBatis mapper（mapper下）以及mapper.xml（resources/mapper下）；handler获取id查询后返回
 

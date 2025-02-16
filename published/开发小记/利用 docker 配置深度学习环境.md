@@ -2,7 +2,7 @@
 description: "之前在配置深度学习环境时，就在考虑如果以后每次拿到一个新的计算资源（比如拿到系里新的计算资源）
 都需要从头配置 Python、PyTorch 以及 Git 等工具的话，会不会很头疼，能不能用 Docker 来保存一个镜像，之后每次直接新建一个容器就可以直接使用。但是发现新建的容器似乎不能直接使用宿主机的 GPU，在查找资料后发现 Nvidia 官方针对这个问题有开发一系列工具包，这里简单记录一下使用的方式。"
 time: 2023-05-09
-heroImage: "https://img.foril.fun/20230325115853.png"
+heroImage: "https://img.foril.space/20230325115853.png"
 tags: []
 ---
 之前在配置深度学习环境时，就在考虑如果以后每次拿到一个新的计算资源（比如拿到系里新的计算资源）
@@ -11,7 +11,7 @@ tags: []
 ## NVIDIA Container Toolkit
 NVIDIA Container Toolkit 是一个开源软件包，他提供了一组容器的运行时库和工具，能够**自动地配置容器使用宿主机的 GPU 资源**。
 
- <img alt="20230325115853" src="https://img.foril.fun/20230325115853.png" width=600px style="display: block; margin:10px auto"/>
+ <img alt="20230325115853" src="https://img.foril.space/20230325115853.png" width=600px style="display: block; margin:10px auto"/>
 
 ## 安装
 在安装 Container Toolkit 前需要在你的 Linux 发行版上先安装 GPU 的驱动，不要求安装 CUDA Toolkit，但需要安装 NVIDIA 驱动程序（CUDA Toolkit 包含 NVIDIA 驱动）。

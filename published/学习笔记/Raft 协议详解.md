@@ -4,7 +4,7 @@ time: 2023-02-04 17:53:45+08:00
 ---
 
 Consensus Algorithm 是分布式系统一个比较流行的话题，其主要目的就是想在多个节点间达成一个对数据状态的共识，这几天为了完成分布式系统的作业，去听了一下 
-[MIT 6.824: Distributed Systems](https://pdos.csail.mit.edu/6.824/schedule.html) 对于这方面内容的讲解，觉得很有意思，下文对自己的理解和学习过程做一个简单的记录以便之后回顾。这里有一个简单的 [动画演示](http://thesecretlivesofdata.com/raft/) 可以在开始之前有初步的理解，详细的内容可以参考这篇 [论文](https://img.foril.fun/Ongaro%20%E5%92%8C%20Ousterhout%20-%20In%20Search%20of%20an%20Understandable%20Consensus%20Algorithm.pdf)。
+[MIT 6.824: Distributed Systems](https://pdos.csail.mit.edu/6.824/schedule.html) 对于这方面内容的讲解，觉得很有意思，下文对自己的理解和学习过程做一个简单的记录以便之后回顾。这里有一个简单的 [动画演示](http://thesecretlivesofdata.com/raft/) 可以在开始之前有初步的理解，详细的内容可以参考这篇 [论文](https://img.foril.space/Ongaro%20%E5%92%8C%20Ousterhout%20-%20In%20Search%20of%20an%20Understandable%20Consensus%20Algorithm.pdf)。
 
 > A consensus algorithm is a process in computer science used to achieve agreement on a single data value among distributed processes or systems
 > <p style="text-align: right">——Wikipedia</p>
@@ -59,7 +59,7 @@ Raft 想要保证的原则是：任何一个被任意机器应用了的操作，
 
 #### Committing entries from previous terms
 需要注意的是哪怕是已经保存在大多数机器上的日志也有可能被覆写，如下图所示，虽然已经在大部分机器上保存，但没来得及 commit 的日志也有可能被覆写。
-<img alt="IMG_6853473AA6B1-1" src="https://img.foril.fun/IMG_6853473AA6B1-1.jpeg" width=600px style="display: block; margin:10px auto"/>
+<img alt="IMG_6853473AA6B1-1" src="https://img.foril.space/IMG_6853473AA6B1-1.jpeg" width=600px style="display: block; margin:10px auto"/>
 为了避免这种情况发生，Raft 不会通过计数之前任期的日志的拷贝数量来确定其是否被 commit，**只通过计数当前任期的日志的拷贝数量来确定是否 commit**。
 
 ## 特性
@@ -266,7 +266,7 @@ func (rf *Raft) refreshCommits()
 
 ## 演示
 通过 persist 前所有测试。
-<img alt="20221207101445" src="https://img.foril.fun/20221207101445.png" style="display: block; margin:10px auto"/>
+<img alt="20221207101445" src="https://img.foril.space/20221207101445.png" style="display: block; margin:10px auto"/>
 
 ## 总结
 Consensus Algorithm 是分布式系统一个比较有趣的话题，其主要目的就是想在多个节点间达成一个对数据状态的共识，这几天为了完成分布式系统的作业，也去听了一下 
@@ -279,7 +279,7 @@ TODO
 论文中图六和图七有一些有意思且非常容易出错的情况，在 MIT 第一次 Raft 课程中最后同学们的讨论以及第二次老师的解答都可以参考，这里先不详细说明（最近考试太多），有机会再做补充。
 
 简单记录  
-<img alt="20221203122354" src="https://img.foril.fun/20221203122354.png" width=600px style="display: block; margin:10px auto"/>
+<img alt="20221203122354" src="https://img.foril.space/20221203122354.png" width=600px style="display: block; margin:10px auto"/>
 
 应该是？：d的term可能是任意高，比如他在term7（term7肯定是leader）后宕机，然后很快restart后又elect为term8 的 leader。
 举例来说，既然他成为term8的leader，说明大多数server知道当前term为8，但**比较比的是最后log的term**，就是说，如果d还活着，他收到其他requestforvote都会拒绝（应为7比6、4、3都大），并让对方变成follower；但是如果d死了，c就可能变成新的term9的leader（哪怕他自己之前的term是6，他在申请成为leader交换时也能发现最新term是8并更新）

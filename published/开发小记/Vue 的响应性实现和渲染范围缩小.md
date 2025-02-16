@@ -21,7 +21,7 @@ heroImage:
 
 在第一次重构的 PR 中，我将组件中计算属性原来的语法做了一些改动（可以理解为从右边改到了左边），主要就是在原来的对象上加入了几个属性。修改后没有用原来的对象，而是通过展开语法，新建了一个对象。
 
-<img alt="code example" src="https://img.foril.fun/20240615194005.png" style="display: block; margin:10px auto"/>
+<img alt="code example" src="https://img.foril.space/20240615194005.png" style="display: block; margin:10px auto"/>
 
 这样做在 React 中十分常见，因为 React 是依赖于 **引用** 比较（`Object.is`）来检测状态变化（不可变性原则，每一个 state 应该作为一个快照，不应该被更新）。当你直接修改现有的数组或对象的内容，无法检测到数组和对象的变化，因为它仅仅是比较引用。**如果引用相同，即使数组或对象发生了变化，React认为状态没有发生变化而不会重新去渲染组件。**
 
@@ -115,7 +115,7 @@ const vnode = {
 
 Excel 中的公式就是一个很好的例子，`C3 = C1 + C2`，当 C1 或 C2 变化时，C3 也会随之变化。
 
-<img alt="响应性的理解" src="https://img.foril.fun/响应性的理解.gif" width=200px style="display: block; margin:10px auto"/>
+<img alt="响应性的理解" src="https://img.foril.space/响应性的理解.gif" width=200px style="display: block; margin:10px auto"/>
 
 而在 JavaScript 中，如果有下面这样的内容，B 或 C 修改时，A 是不会发生响应式修改的。
 
@@ -287,9 +287,9 @@ export default {
 
 从 Devtools 调试中我们也可以看到使用 `div` 时 `renderEffect` 的实例是 `App`，而使用 `ListItem` 时 `renderEffect` 的实例是 `ListItem`。
 
-<img alt="渲染范围 App" src="https://img.foril.fun/渲染范围 App.PNG" width=600px style="display: block; margin:10px auto"/>
+<img alt="渲染范围 App" src="https://img.foril.space/渲染范围 App.PNG" width=600px style="display: block; margin:10px auto"/>
 
-<img alt="渲染范围 ListItem" src="https://img.foril.fun/渲染范围 ListItem.PNG" width=600px style="display: block; margin:10px auto"/>
+<img alt="渲染范围 ListItem" src="https://img.foril.space/渲染范围 ListItem.PNG" width=600px style="display: block; margin:10px auto"/>
 
 回到最开始遇到的渲染开销的问题，想要在每个 item 上加一些属性，如果是使用原来的对象，只会触发 `ListItem` 的重渲染，而构建新对象，会触发上层组件的重渲染，Vue 的虚拟 DOM 系统将对整个组件树进行重新渲染。在这个过程中，Vue 需要比较大量新旧虚拟 DOM 树，找出差异，并决定如何最有效地更新实际的 DOM。
 
@@ -305,11 +305,11 @@ export default {
 
 写法一
 
-<img alt="20240616001917" src="https://img.foril.fun/20240616001917.png" width=600px style="display: block; margin:10px auto"/>
+<img alt="20240616001917" src="https://img.foril.space/20240616001917.png" width=600px style="display: block; margin:10px auto"/>
 
 写法二
 
-<img alt="noGetOwnProperty" src="https://img.foril.fun/noGetOwnProperty.png" width=600px style="display: block; margin:10px auto"/>
+<img alt="noGetOwnProperty" src="https://img.foril.space/noGetOwnProperty.png" width=600px style="display: block; margin:10px auto"/>
 
 但当使用 `item.hasOwnProperty('thumbnail')` 时，Vue 的响应式系统注册的 get 的 `target` 和 `key` 是 `item.hasOwnProperty`，所以只有当 `item.hasOwnProperty` 被 set 时才会触发组件的重渲染。
 另一方面，使用 `item.thumbnail === undefined` 时，实际上是在访问 `item` 对象的 `thumbnail` 属性，这会创建一个 getter，使得 thumbnail 成为一个响应式依赖。因此，当 thumbnail 属性的值更新时，Vue 会检测到这个变化，并触发组件的重渲染。

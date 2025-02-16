@@ -1,7 +1,7 @@
 ---
 description: "由于 tsc 并不会在 emitted code 中解决 import 的路径别名（这个问题已经在社区有很多讨论了，官方的意思是这就是期望的输出），所以我们需要额外加入一些配置来完成别名的配置，这里记录在 ts 项目中配置 \"@/*\" 别名报错的问题的三种解决方案。"
 time: 2023-12-2T15:44:28+08:00
-heroImage: "https://img.foril.fun/20230622201156.png"
+heroImage: "https://img.foril.space/20230622201156.png"
 tags: []
 ---
 
@@ -190,7 +190,7 @@ TS_NODE_BASEURL=./build_tsc node -r tsconfig-paths/register main.js
 }
 ```
 
-<img alt="20230510121544" src="https://img.foril.fun/20230510121544.png" width=300px style="display: block; margin:10px auto"/>
+<img alt="20230510121544" src="https://img.foril.space/20230510121544.png" width=300px style="display: block; margin:10px auto"/>
 
 ***这里需要特别注意这种方法生成的 js 文件中是包含别名信息的，不能直接使用 node 运行，必须注册 `tsconfig-paths` 模块，这和上面使用 `tsc-alias` 直接将 js 中的别名替换的方法不同，`tsc-alias` 生成的 js 文件可以直接使用 node 运行。***
 
@@ -237,7 +237,7 @@ const outDirPaths = Object.entries(paths).reduce(
 
 tsConfigPaths.register({ baseUrl, paths: outDirPaths });
 ```
-<img alt="20230510144821" src="https://img.foril.fun/20230510144821.png" width=600px style="display: block; margin:10px auto"/>
+<img alt="20230510144821" src="https://img.foril.space/20230510144821.png" width=600px style="display: block; margin:10px auto"/>
 
 ## 参考
 * https://www.npmjs.com/package/tsconfig-paths

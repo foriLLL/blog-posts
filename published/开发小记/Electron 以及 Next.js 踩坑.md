@@ -1,7 +1,7 @@
 ---
 description: "最近毕设准备采用 Electron 将 Web 项目迁移到本地应用，Next.js 相比 CRA 封装了很多开箱即用功能，但在学习过程中还是踩了一些坑，在这里做一个记录。"
 time: 2022-04-12
-heroImage: "https://img.foril.fun/20230622181312.png"
+heroImage: "https://img.foril.space/20230622181312.png"
 tags: []
 ---
 
@@ -9,8 +9,8 @@ tags: []
 
 当我想利用 `next export` 生成静态文件并用 Electron 直接 `loadFile()` 来显示页面时，发现生成的页面没有任何样式和 js 脚本，通过 Chrome 开发者工具检查发现生成的资源路径全部都是 `/_next/...` 这种形式。
 
-<img src="https://img.foril.fun/next_export_bug.png" width=600px style="margin:10px auto"/>
-<img src="https://img.foril.fun/next_export_bug2.png" width=600px style="margin:10px auto"/>
+<img src="https://img.foril.space/next_export_bug.png" width=600px style="margin:10px auto"/>
+<img src="https://img.foril.space/next_export_bug2.png" width=600px style="margin:10px auto"/>
 
 在网上搜索解决方案后发现这个问题早在2019年就有在社区[讨论](https://github.com/vercel/next.js/issues/8158)过，主要出现在不使用服务器而是直接单独使用 html。
 

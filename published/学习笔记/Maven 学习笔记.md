@@ -292,7 +292,7 @@ mvn package -Pdev -Dmaven.test.skip=true
 
 假如一个项目在不同的环境下需要不同的配置文件。
 
-![Maven 打包](https://img.foril.fun/maven_switch.jpg?imageView2/1/w/400)
+![Maven 打包](https://img.foril.space/maven_switch.jpg?imageView2/1/w/400)
 
 
 可在 `pom.xml` 中配置 Profiles，应对不同的环境。

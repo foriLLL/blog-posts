@@ -10,7 +10,7 @@ tags: []
 
 在安装过程中，electron 模块会通过 electron-download 为您的平台下载 Electron 的预编译二进制文件。查阅文档后发现可以配置国内镜像。
 
-![electron-download](https://img.foril.fun/electron-download.webp)
+![electron-download](https://img.foril.space/electron-download.webp)
 
 Linux 在 `~/.npmrc` 中修改  
 Windows 在 `C:\Users\{username}\.npmrc` 中修改

@@ -68,7 +68,7 @@ Plugin 允许你在构建中引入任务、文件和依赖项配置之外的新�
 插件提供了跨多个项目重用逻辑和配置的方法。使用插件，您可以编写一次任务，并在多个构建中使用它。**或者您可以将常见的配置(如日志记录、依赖项和版本管理)存储在一个地方。** 这减少了构建脚本中的重复。适当地用插件对构建过程建模可以极大地提高易用性和效率。
 
 Java plugin - tasks
-<img alt="Java_plugin_tasks" src="https://img.foril.fun/Java_plugin_tasks.png" width=600px style="display: block; margin:10px auto"/>
+<img alt="Java_plugin_tasks" src="https://img.foril.space/Java_plugin_tasks.png" width=600px style="display: block; margin:10px auto"/>
 
 ### Build Phases
 
@@ -121,7 +121,7 @@ Wrapper Jar 文件，包含下载 Gradle 发行版的代码。包括 Jar 在内�
    * 可选的，在下载 Gradle 发行版时使用的超时(以毫秒为单位)。
    * 可选的，一个用于设置分发 url 的验证布尔值。
 
-<img alt="wrapper.properties" src="https://img.foril.fun/20230712133836.png" width=600px style="display: block; margin:10px auto"/>
+<img alt="wrapper.properties" src="https://img.foril.space/20230712133836.png" width=600px style="display: block; margin:10px auto"/>
 
 3. **gradlew, gradlew.bat**  
 一个 shell 脚本和一个 Windows 批处理脚本，用于使用 Wrapper 执行构建。
@@ -282,7 +282,7 @@ tasks.named('test') {
 gradle run（不使用Wrapper）
 ```
 
-<img src="https://img.foril.fun/gradle_plugin_application.jpg" width='400px'/>
+<img src="https://img.foril.space/gradle_plugin_application.jpg" width='400px'/>
 
 >当你第一次运行包装器脚本 `gradlew` 时，可能会有一个延迟，因为这个版本的 Gradle 被下载并存储在本地 `~/.gradle/wrapper/dists` 文件夹。
 

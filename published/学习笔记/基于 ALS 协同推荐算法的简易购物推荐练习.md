@@ -28,7 +28,7 @@ ALS属于数据挖掘，可以做推荐系统，比如电影推荐、商品推�
 > 2. 以高容错的方式存储海量数据流。
 > 3. 保证数据流的顺序。
 
-![Kafka架构](https://img.foril.fun/kafka%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97.jpg)
+![Kafka架构](https://img.foril.space/kafka%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97.jpg)
 
 ### 生产者模拟数据
 
@@ -39,7 +39,7 @@ ALS属于数据挖掘，可以做推荐系统，比如电影推荐、商品推�
 kafka-topics.sh --create --partitions 3 --replication-factor 2 --topic rate --zookeeper node91:2181,node92:2181,node93:2181
 ```
 
-![创建topic](https://img.foril.fun/%E5%88%9B%E5%BB%BAtopic.jpg)
+![创建topic](https://img.foril.space/%E5%88%9B%E5%BB%BAtopic.jpg)
 
 这里在模拟出数据了之后可以模拟消费者查看是否能够拉取到数据:
 
@@ -49,7 +49,7 @@ kafka-console-consumer.sh --bootstrap-server node91:9092,node92:9092,node93:9092
 
 效果如图：
 
-![模拟消费者](https://img.foril.fun/%E6%A8%A1%E6%8B%9F%E6%B6%88%E8%B4%B9%E8%80%85.jpg)
+![模拟消费者](https://img.foril.space/%E6%A8%A1%E6%8B%9F%E6%B6%88%E8%B4%B9%E8%80%85.jpg)
 
 ### 训练模型
 
@@ -60,6 +60,6 @@ kafka-console-consumer.sh --bootstrap-server node91:9092,node92:9092,node93:9092
 
 之后便可以在SparkStreaming中作为Kafka的消费者，对模拟出的每一个用户进行商品推荐了。推荐的结果可以按照需求存储，这里放入redis。
 
-![reids推荐结果](https://img.foril.fun/redis%E6%8E%A8%E8%8D%90%E7%BB%93%E6%9E%9C.jpg)
+![reids推荐结果](https://img.foril.space/redis%E6%8E%A8%E8%8D%90%E7%BB%93%E6%9E%9C.jpg)
 
 项目后期加入[git仓库](https://gitee.com/foril/als_model_prac)，代码较草率，轻喷。

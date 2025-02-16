@@ -30,10 +30,10 @@ Spring 的核心就是提供了一个 **IoC 容器**，它可以管理所有轻�
 IoC(Inversion of Control)就是控制反转，不是什么技术，而是一种**设计思想**。在 Java 开发中，<u>Ioc 意味着将你设计好的对象交给容器控制，而不是传统的在你的对象内部直接控制</u>。
 
 正向控制  
-<img src="https://img.foril.fun/%E6%AD%A3%E5%90%91%E6%8E%A7%E5%88%B6.jpg" width=400 style="margin:0 auto"/>
+<img src="https://img.foril.space/%E6%AD%A3%E5%90%91%E6%8E%A7%E5%88%B6.jpg" width=400 style="margin:0 auto"/>
 
 控制反转  
-<img src="https://img.foril.fun/%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC.jpg" width=400 style="margin:0 auto"/>
+<img src="https://img.foril.space/%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC.jpg" width=400 style="margin:0 auto"/>
 
 举例来说，假如我们想生成一个实体类，在传统的 Java 开发中，我需要在程序中`new`一个对象出来对他进行操作，而有了 IoC 容器后，生成对象的操作只需要在容器中完成，在代码中只需要拿到容器中的对象即可，这个过程有点类似连接池中的连接对象，只需要从池中拿到连接对象即可。在 Spring 中，我们可以通过 xml 在容器中创建对象，然后在代码中引入容器并从中拿到对象即可。
 

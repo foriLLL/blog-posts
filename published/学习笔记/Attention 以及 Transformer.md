@@ -2,7 +2,7 @@
 description: 2017 年，Google 提出了一种新的神经网络架构 Transformer，它在机器翻译任务上取得了很好的效果。Transformer 的核心是 Attention 机制，它在 NLP 领域有着广泛的应用。本文尝试对 Transformer 以及 Attention 机制进行一些总结。
 time: 2024-01-09T15:54:50+08:00
 tags: 
-heroImage: https://img.foril.fun/20240109155545.png
+heroImage: https://img.foril.space/20240109155545.png
 ---
 
 2017 年，Google 提出了一种新的神经网络架构 Transformer，它在机器翻译任务上取得了很好的效果。Transformer 的核心是 Attention 机制，它在 NLP 领域有着广泛的应用。在阅读了一些相关论文之后，本文尝试对 Transformer 以及 Attention 机制进行一些总结。
@@ -34,7 +34,7 @@ Attention 机制最早从图像领域诞生，于 90 年代被提出。2014 年�
 
 下面是一个简单的示意图：
 
-<img alt="Attention" src="https://img.foril.fun/Attention.svg" width=600px style="display: block; margin:10px auto"/>
+<img alt="Attention" src="https://img.foril.space/Attention.svg" width=600px style="display: block; margin:10px auto"/>
 
 类比我们人类的注意力，key 是多个输入的 *非意志线索*，代表一个物品本身的特点和突出性，value 是和 key 一一对应的，代表的是这样一个物品对你的实际感官输入。而 query 则是一个 *意志线索*，代表的是你的意志：对于这些输入你做选择的意愿，想要找到的是什么。  
 在 Attention 内部，会通过一个 **汇聚函数（pooling function）** 来计算出给每个 value 的权重，然后对所有 value 进行加权平均，得到最终的输出，当然输出的维度是和 value 的维度是一样的。
@@ -49,7 +49,7 @@ $$
 \alpha(\mathbf{q}, \mathbf{k}_i) = \mathrm{softmax}(a(\mathbf{q}, \mathbf{k}_i)) = \frac{\exp(a(\mathbf{q}, \mathbf{k}_i))}{\sum_{j=1}^m \exp(a(\mathbf{q}, \mathbf{k}_j))} \in \mathbb{R}
 $$
 
-<img alt="汇聚函数" src="https://img.foril.fun/汇聚函数.svg" width=500px style="display: block; margin:10px auto"/>
+<img alt="汇聚函数" src="https://img.foril.space/汇聚函数.svg" width=500px style="display: block; margin:10px auto"/>
 
 所以只要是一个输入 query、key、value，输出是一个常数的函数，就可以作为注意力汇聚函数
 哪怕是不可训练的函数，比如平均汇聚。
@@ -106,7 +106,7 @@ torch.bmm(self.dropout(self.attention_weights), values)
 
 因此，允许注意力机制组合使用查询、键和值的不同 **子空间表示（representation subspaces）** 可能是有益的。
 
-<img alt="多头注意力" src="https://img.foril.fun/多头注意力.svg" width=500px style="display: block; margin:10px auto"/>
+<img alt="多头注意力" src="https://img.foril.space/多头注意力.svg" width=500px style="display: block; margin:10px auto"/>
 
 具体实现时，就是把三个输入 **投影** $h$ 次，投影为 $d_q, d_k, d_v$ 大小，
 每次投影得到的形状一致，但投影矩阵权重不一致，学到不同子空间（说白了就是这里的全连接层权重都是不同的），投影的形状可以自己决定（Transformer 中也对不同参数进行了一些比较。），最后再将投影后得到的三部分输入送入 Attention 汇聚中，将得到的结果拼接起来，再经过一个全连接层，得到最终的输出。
@@ -158,7 +158,7 @@ Transformer 本质上也是针对序列任务做出的一种 **Encoder-Decoder**
 
 ### 模型结构
 
-<img alt="Transformer" src="https://img.foril.fun/20240109155545.png" width=400px style="display: block; margin:10px auto"/>
+<img alt="Transformer" src="https://img.foril.space/20240109155545.png" width=400px style="display: block; margin:10px auto"/>
 
 结合图片来看，Transformer 的 Encoder 和 Decoder 都是由多个相同的 block 堆叠而成。  
 这里所说的 **堆叠（stack）** 指的就是每一层的输出成为下一层的输入。第一层的输入是序列的嵌入表示，最后一层的输出被用于后续的任务
@@ -250,7 +250,7 @@ Bahdanau Attention 也是一个 seq2seq 模型，它的 Encoder 和 Decoder 都�
 
 在下面这个传统的 Encoder-Decoder 模型，Encoder 最后输出的隐状态作为上下文变量，在 Decoder 中的每一步都会作为输入，这样 Decoder 中的每一步都会关注到 Encoder 中的所有位置。  
 
-<img alt="传统 Encoder-Decoder 模型" src="https://img.foril.fun/传统 seq2seq 模型.svg" width=600px style="display: block; margin:10px auto"/>
+<img alt="传统 Encoder-Decoder 模型" src="https://img.foril.space/传统 seq2seq 模型.svg" width=600px style="display: block; margin:10px auto"/>
 
 但这样的局限就是，Decoder 所有位置收到的上下文信息都是完全相同的。然而，并非所有输入（源）词元都对解码某个词元有用。  
 
@@ -258,7 +258,7 @@ Bahdanau Attention 正是解决了这样一个问题，它在每个时间步都�
 
 Bahdanau Attention 的结构如下图所示：
 
-<img alt="Bahdanau Attention" src="https://img.foril.fun/Bahdanau Attention.svg" width=600px style="display: block; margin:10px auto"/>
+<img alt="Bahdanau Attention" src="https://img.foril.space/Bahdanau Attention.svg" width=600px style="display: block; margin:10px auto"/>
 
 从这个图片也可以看出，Bahdanau Attention 的结构和 Transformer 的结构非常相似，只是 Transformer 中堆叠的 block 没有采用 RNN，而是采用了 Self Attention 和全连接层。
 

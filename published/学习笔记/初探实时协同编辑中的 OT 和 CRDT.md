@@ -26,8 +26,8 @@ OT 通过对操作进行转换来处理并发编辑。它提供了一种操作�
 下图是 OT 解决「脏路径」和「并发冲突」的直观理解。
 
 <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center;">
-  <img alt="OT 解决脏路径" src="https://img.foril.fun/OT 解决脏路径.png" style="max-width: 600px; width: 350px; margin: 10px;">
-  <img alt="OT 解决并发冲突" src="https://img.foril.fun/OT 解决并发冲突.png" style="max-width: 600px; width: 350px; margin: 10px;">
+  <img alt="OT 解决脏路径" src="https://img.foril.space/OT 解决脏路径.png" style="max-width: 600px; width: 350px; margin: 10px;">
+  <img alt="OT 解决并发冲突" src="https://img.foril.space/OT 解决并发冲突.png" style="max-width: 600px; width: 350px; margin: 10px;">
 </div>
 
 
@@ -43,7 +43,7 @@ CRDT 最初是为了解决分布式系统最终数据一致性而提出的，它
 
 下面用一个例子来说明 CRDT 的工作原理，主要体现修改的顺序对最终结果没有影响。
 
-<img alt="CRDT 修改例子" src="https://img.foril.fun/CRDT 修改例子.png" width=300px style="display: block; margin:10px auto"/>
+<img alt="CRDT 修改例子" src="https://img.foril.space/CRDT 修改例子.png" width=300px style="display: block; margin:10px auto"/>
 
 我们设计一种编辑的表达方式 $XXX_{a,b}$ 作为一个操作的标识，$a$ 表示操作的作者编号，$b$ 表示操作的序号。对于每个编辑，都有一个全局唯一的 id，这个 id 由作者编号和序号组成。对同样的编辑 id 集合，无论他们的顺序如何，最终的结果都是一样的。
 

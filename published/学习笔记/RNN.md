@@ -2,7 +2,7 @@
 description: 最近模型又用到了 RNN 模型，发现之前对于 RNN 的理解已经相当模糊了，这里从李沐老师的《动手学深度学习》出发，对 RNN 模型做一个简单的总结。
 time: 2023-12-06T15:02:04+08:00
 tags: 
-heroImage: https://img.foril.fun/20231206150254.png
+heroImage: https://img.foril.space/20231206150254.png
 ---
 
 循环神经网络（RNN）是为了更好地处理序列信息的一种神经网络。通过引入状态变量来记录过去的信息，从而更好地处理当前的输入。接下来我会从序列任务出发，介绍 RNN 的引入背景并介绍 RNN 的基本结构，然后介绍 RNN 的一些变种。本文并不会涉及有关 RNN 训练时的具体梯度计算，而是从一个更加直观的角度来介绍 RNN 的基本结构和一些变种，以便之后回顾翻阅。
@@ -47,7 +47,7 @@ $$
 
 这种方法与上面说的隐变量自回归模型的思路是一致的，这里的 $f$ 函数是一个神经网络，这样的话，我们就可以通过神经网络来学习到更加复杂的模式，而不是像 $n$ 元模型那样只能学习到固定长度的模式。
 
-<img alt="RNN" src="https://img.foril.fun/RNN.svg" width=600px style="display: block; margin:10px auto"/>
+<img alt="RNN" src="https://img.foril.space/RNN.svg" width=600px style="display: block; margin:10px auto"/>
 
 上面图片展示的就是一个最基础的 RNN 模型，每个时间步的输入 $X_t$ 和隐状态 $H_t$ 都是一个向量，考虑 batch 的情况，$X_t$ 是一个 $n \times d$ 的矩阵，$H_t$ 是一个 $n \times h$ 的矩阵，其中 $n$ 是 batch 的大小，$d$ 是输入的维度，$h$ 是隐状态的维度。  
 模型的参数包括 $\mathbf{W}_{xh} \in \mathbb{R}^{d \times h}, \mathbf{W}_{hh} \in \mathbb{R}^{h \times h}$ 和 $\mathbf{b}_q \in \mathbb{R}^{1 \times h}$，其中 $W_{xh}$ 是输入到隐状态的权重矩阵，$W_{hh}$ 是隐状态到隐状态的权重矩阵，$b_q$ 是隐状态的偏置。
@@ -85,7 +85,7 @@ $$
 1. 存储重要的早期信息
 2. 控制重置内部状态表示，跳过无关时间步信息
 
-<img alt="GRU" src="https://img.foril.fun/GRU.svg" width=600px style="display: block; margin:10px auto"/>
+<img alt="GRU" src="https://img.foril.space/GRU.svg" width=600px style="display: block; margin:10px auto"/>
 
 上图是一个完整的 GRU 模型，其中 $R_t$ 是重置门，$Z_t$ 是更新门，$H_t$ 是隐状态，$X_t$ 是输入，这两个门的输出经过 sigmoid 函数后得到的值在 $[0, 1]$ 之间，形状和隐状态 $H_t$ 保持一致，所以可以理解为门的开关：  
 
@@ -123,7 +123,7 @@ LSTM 有许多比 GRU 一样的属性，比 GRU 的设计稍复杂一些，但�
 同时，由于 RNN 每个时间步的输出都是隐状态 $H_t$ 经过全连接层的输出，因此我们引入一个输出门 $O_t$ 来控制得到 $H_t$。  
 所以大体上看计算流程可以理解为通过记忆元传递整个序列的记忆信息，然后通过输出门来控制 $H_t$ 输出。
 
-<img alt="LSTM" src="https://img.foril.fun/LSTM.svg" width=600px style="display: block; margin:10px auto"/>
+<img alt="LSTM" src="https://img.foril.space/LSTM.svg" width=600px style="display: block; margin:10px auto"/>
 
 上图给出的是 LSTM 的计算流程，其中 $C$ 是记忆元，$\tilde{C_t}$ 是候选记忆元，$H$ 是隐状态，$X_t$ 是输入。  
 $I_t$ 是输入门，$F_t$ 是遗忘门，$O_t$ 是输出门，这三个门的输出经过 sigmoid 函数后得到的值在 $[0, 1]$ 之间，形状和隐状态 $H_t$ 保持一致，所以可以理解为门的开关：
@@ -178,7 +178,7 @@ $$
 
 如下图所示：
 
-<img alt="深度RNN" src="https://img.foril.fun/深度RNN.svg" width=350px style="display: block; margin:10px auto"/>
+<img alt="深度RNN" src="https://img.foril.space/深度RNN.svg" width=350px style="display: block; margin:10px auto"/>
 
 ### 深度 RNN 的计算
 
@@ -209,7 +209,7 @@ $$\mathbf{O}_t = \mathbf{H}_t^{(L)} \mathbf{W}_{hq} + \mathbf{b}_q,$$
 
 > 我___饿了，我可以吃半头猪。
 
-<img alt="双向RNN" src="https://img.foril.fun/双向RNN.svg" width=350px style="display: block; margin:10px auto"/>
+<img alt="双向RNN" src="https://img.foril.space/双向RNN.svg" width=350px style="display: block; margin:10px auto"/>
 
 对于任意时间步 $t$，给定一个小批量的输入数据 $\mathbf{X}_t \in \mathbb{R}^{n \times d}$，并且令隐藏层激活函数为 $\phi$。  
 在双向架构中，我们设该时间步的前向和反向隐状态分别为 $\overrightarrow{\mathbf{H}}_t  \in \mathbb{R}^{n \times h}$ 和 $\overleftarrow{\mathbf{H}}_t  \in \mathbb{R}^{n \times h}$，
@@ -244,7 +244,7 @@ $$
 
 Encoder-Decoder 架构想要解决的问题是，当输入和输出都是变长序列时（例如机器翻译任务），如何将它们映射到一个固定维度的向量上。
 
-<img alt="Encoder-Decoder" src="https://img.foril.fun/Encoder-Decoder.svg" width=400px style="display: block; margin:10px auto"/>
+<img alt="Encoder-Decoder" src="https://img.foril.space/Encoder-Decoder.svg" width=400px style="display: block; margin:10px auto"/>
 
 第一个组件是 **编码器**（encoder），它可以是一个循环神经网络，接受一个可变长度的序列作为输入，输出一个固定长度的向量作为状态。
 
@@ -255,7 +255,7 @@ Encoder-Decoder 架构想要解决的问题是，当输入和输出都是变长�
 利用 Encoder-Decoder 架构，我们可以利用 RNN，设计一个序列到序列（seq2seq）模型，用于处理输入和输出都是可变长度序列的任务，例如机器翻译。  
 输入序列的信息被编码到隐状态中。为了连续生成输出序列的词元，解码器基于 **输入序列的编码信息** 和 **输出序列已经看见的或者生成的词元** 来预测下一个词元。
 
-<img alt="seq2seq" src="https://img.foril.fun/seq2seq.svg" width=600px style="display: block; margin:10px auto"/>
+<img alt="seq2seq" src="https://img.foril.space/seq2seq.svg" width=600px style="display: block; margin:10px auto"/>
 
 如图所示的机器翻译任务，编码器每个时间步的输入是一个英语词元，输出是一个固定长度的向量，解码器每个时间步的输入是一个法语词元或者一个特殊的开始词元（例如`<bos>`），输出是一个法语词元或者一个特殊的结束词元（例如`<eos>`）。
 
@@ -330,7 +330,7 @@ sequence_mask(X, torch.tensor([1, 2]))
 
 同时在训练时，我们可以使用 **强制教学**（teacher forcing）的方法，即使用真实的输出序列，经过嵌入层后作为 Decoder 的输入，而不是使用上一个时间步的输出作为解码器的输入，这样可以加速训练过程，但是在预测时，我们需要使用上一个时间步的输出经过嵌入层后作为解码器的输入。
 
-<img alt="encoder-decoder details" src="https://img.foril.fun/encoder-decoder details.svg" width=400px style="display: block; margin:10px auto"/>
+<img alt="encoder-decoder details" src="https://img.foril.space/encoder-decoder details.svg" width=400px style="display: block; margin:10px auto"/>
 
 此外，对于一个 batch 批次中序列长度不同的数据，我们需要通过 `pad_sequence`、`pack_padded_sequence` 和 `pad_packed_sequence` 来进行处理：
 

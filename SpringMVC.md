@@ -3,7 +3,7 @@ MVC是Web服务端常见的设计模式，Spring MVC就是一个基于Java的实
 
 在传统的Servlet API上实现MVC架构是一件非常繁琐的事情，我们需要实现不同的接口，而且JSP开发实在不够友好，我们希望有这么一个MVC框架，能够自动解析请求的类型，自动对应请求中的参数，这也就是Spring MVC所做的众多工作之一。
 
-<img alt="Spring MVC工作流程" src="https://img.foril.fun/20220703164144.png" width=600px style="margin:10px auto"/>
+<img alt="Spring MVC工作流程" src="https://img.foril.space/20220703164144.png" width=600px style="margin:10px auto"/>
 
 ## 参考文献
 - https://baijiahao.baidu.com/s?id=1717728194505578801&wfr=spider&for=pc

@@ -33,11 +33,11 @@ hello 世界
 
 现在我们需要将 `b1` 合并到 `main` 中，这时候 Git 会提示我们有冲突，已经记录了一个 preimage，我们可以通过 `git rerere status` 来查看：
 
-<img alt="20230331100935" src="https://img.foril.fun/20230331100935.png" width=300px style="display: block; margin:10px auto"/>
+<img alt="20230331100935" src="https://img.foril.space/20230331100935.png" width=300px style="display: block; margin:10px auto"/>
 
 这里我们可以看到，Git 已经记录了一个 preimage，我们可以通过 `git rerere diff` 来查看这个 preimage 的具体内容：
 
-<img alt="20230331101000" src="https://img.foril.fun/20230331101000.png" width=300px style="display: block; margin:10px auto"/>
+<img alt="20230331101000" src="https://img.foril.space/20230331101000.png" width=300px style="display: block; margin:10px auto"/>
 
 我们可以看到，这个 preimage 的内容就是我们的冲突文件（如果不想记录这个文件的冲突，可以通过 `git rerere clear` 来清除这个 preimage）。
 
@@ -49,7 +49,7 @@ hello 世界
 
 然后我们再次执行 `git rerere diff`，可以看到，Git 已经记录了一个 resolution：
 
-<img alt="20230331101248" src="https://img.foril.fun/20230331101248.png" width=300px style="display: block; margin:10px auto"/>
+<img alt="20230331101248" src="https://img.foril.space/20230331101248.png" width=300px style="display: block; margin:10px auto"/>
 
 在这个 resolution 中，Git Rerere 记录了解决冲突的方案，也就是删除了冲突的部分，然后将 `hello.txt` 的内容修改为：`你好 世界`。接着我们就可以提交这个修改了。提交后就可以复用这个 resolution。
 
@@ -57,4 +57,4 @@ hello 世界
 
 之后，当我们再次遇到相同的冲突时，Git Rerere 就会自动应用之前记录的解决方法，而不需要手动再次解决。这样可以大大简化开发过程，提高开发效率。
 
-<img alt="20230331102023" src="https://img.foril.fun/20230331102023.png" width=300px style="display: block; margin:10px auto"/>
+<img alt="20230331102023" src="https://img.foril.space/20230331102023.png" width=300px style="display: block; margin:10px auto"/>

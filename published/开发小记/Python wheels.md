@@ -2,7 +2,7 @@
 description: 有关使用 pip install 安装 Pypi 上的 wheel 包的一些问题，包括什么是 wheel、source distribution 与 built distribution 的区别、wheel 的优势等内容。
 time: 2023-11-21T18:20:19+08:00
 tags: 
-heroImage: "https://img.foril.fun/Python wheel.png"
+heroImage: "https://img.foril.space/Python wheel.png"
 ---
 
 ## sdist 与 bdist
@@ -32,13 +32,13 @@ Successfully installed uwsgi-2.0.18
 
 如果我们查看 Pypi 上的 [uWSGI 下载文件](https://pypi.org/project/uWSGI/#files) ，我们可以看到它只有 Source Distribution：
 
-<img alt="uWSGI_pypi" src="https://img.foril.fun/uWSGI_pypi.png" width=600px style="display: block; margin:10px auto"/>
+<img alt="uWSGI_pypi" src="https://img.foril.space/uWSGI_pypi.png" width=600px style="display: block; margin:10px auto"/>
 
 Source Distribution 包含源代码，不仅包括 Python 代码，还包括与包捆绑在一起的任何扩展模块（通常是 C 或 C++ 语言）的源代码。对于 sdist，一些扩展模块是在用户端而不是开发人员端编译的。
 
 而对于一些有 wheel 包的包，我们可以看到它有 Source Distribution 和 Built Distribution：
 
-<img alt="chardet_pypi" src="https://img.foril.fun/chardet_pypi.png" width=600px style="display: block; margin:10px auto"/>
+<img alt="chardet_pypi" src="https://img.foril.space/chardet_pypi.png" width=600px style="display: block; margin:10px auto"/>
 
 这里的 `.whl` 文件就是 Built Distribution（bdist），如果使用 pip 安装也可以看出明显不同：如果有合适的 wheel 包，pip 会直接安装 wheel 包，而不是下载源代码分发包（source distribution）然后在本地编译它。
 
