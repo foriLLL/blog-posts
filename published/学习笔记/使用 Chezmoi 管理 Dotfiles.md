@@ -1,4 +1,9 @@
-# 使用 Chezmoi 优雅管理你的 Dotfiles
+---
+description: "使用 Chezmoi 优雅管理你的 Dotfiles"
+time: 2025-04-04T15:09:11+08:00
+tags: 
+heroImage: 
+---
 
 在多台机器（比如你的个人电脑、工作电脑、服务器）之间保持一致的开发环境和工具配置，是许多开发者和 Linux/macOS 用户追求的目标。我们常常需要同步诸如 `.zshrc`, `.vimrc`, `.gitconfig` 等“点文件”(dotfiles)。
 
