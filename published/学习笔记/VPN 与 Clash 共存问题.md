@@ -212,48 +212,11 @@ Clash Meta 是一个功能强大的网络代理工具。
 
 **总而言之，Clash Meta TUN 模式与 N2N/蒲公英这类虚拟局域网软件在路由层面是可以通过优先级规则自然区分流量路径的，实现共存通常没有大的障碍。关键在于理解各自的工作原理以及流量在不同场景下的实际走向。**
 
----
-*（博客文章可以继续讨论具体的配置建议或问题排查。）*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 补充
 
 在实际的实验中，发现蒲公英的路由表项会实时更新，加入/退出都会被通知到小组其他成员实时刷新。
 而 N2N 的路由表项是静态的，加入后会将整个网段的路由表项写入你的路由表。
 
-## 结论
-clash meta tun 会创建虚拟网卡，蒲公英或者其他虚拟局域网软件也会创建虚拟网卡。
-然后会创建自己的路由表表项
-1. 蒲公英狠一点，会把你的网络成员里的每一个成员的具体 ip 实时写入你的路由表，实时的加入/退出都会被通知到小组其他成员实时刷新
-2. happynet(n2n)会将整个网段的路由表项写入你的路由表
-3. clash meta 的日志中看不到局域网的访问记录，因为没有经过 clash meta 的 tun 虚拟网卡
+<img alt="路由表示例" src="https://img.foril.space/20250424151725.png" width=600px style="display: block; margin:10px auto"/>
 
-> 注意 windows 默认不允许被 ping，想要查看效果需要在防火墙里允许 icmpin，具体找教程吧
-
-<img alt=".1-sunloginclient1A87423D-7A35-491A-9298-A40BE39CCD27" src="https://img.foril.fun/.1-sunloginclient1A87423D-7A35-491A-9298-A40BE39CCD27" width=600px style="display: block; margin:10px auto"/>
-
-<img alt=".2-sunloginclient05CD3F1B-4549-4A03-B32F-E4BFD0A02874" src="https://img.foril.fun/.2-sunloginclient05CD3F1B-4549-4A03-B32F-E4BFD0A02874" width=600px style="display: block; margin:10px auto"/>
----
-
-
-
-
-二者都是虚拟网卡，为什么说 clash tun 不能代理网络层？
+此外注意 windows 默认不允许被 ping，想要查看效果需要在防火墙里允许 icmpin，具体找教程吧
